@@ -1,2 +1,1 @@
-**200 MHz bandwidth oscilloscope
-**
+200 MHz bandwidth oscilloscope
