@@ -13,6 +13,8 @@ The wavelet transform is similar to the Fourier transform, except it replaces th
 
 Since hardware libraries for FFTs are more easily accessible, we will attempt to use a STFT-based approach for out MRA. The approach is simple, we will use filters to separate the high frequency bands from the low frequency bands and perform a STFT with high time resolution on the high frequency information. The window function will be a Gaussian PDF whose width will be chosen so that it provides good time resolution while keeping the frequency uncertainty negligible compared the the cutoff frequency of the high pass filter. The lowpass filter will average in between samples to decimate the output data sequence while retaining low frequency information. The results from both of these operations will be stored in memory and called upon when reconstructing the waveform. The reconstruction will involve summing the inverse STFT with the averaged sequence so that the high frequency components of the waveform end up "riding ontop of" of the low frequency components. The reconstruction algorithm is summarized in the following block diagram:
 
+
+
 ![image](https://github.com/omarsbu/200-MHz-Bandwidth-Oscilloscope-/assets/99481191/c853a4ef-ea9e-4de7-b548-086e6c528210)
 
 
