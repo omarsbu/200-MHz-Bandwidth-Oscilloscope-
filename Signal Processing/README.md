@@ -8,8 +8,7 @@ At the maximum time per division setting of 1 second/div, the oscilloscope would
 gigabits of memory to store all of the samples before processing them! Since we do not have enough memory to process all of the samples at once, we will need a buffer to process parts of the signal and then 
 reconstruct the waveform from the segmented data. In order to do this, we will need to obtain a time-frequency representation of the signal that will provide insight to how its various frequency components change over time. We can obtain a time-frequency representation of a signal using two primary methods: the Short-Time Fourier Transform (STFT) and the Wavelet Transform
 
-
-
+The STFT takes a fragment of the signal and performs an FFT on it to obtain the signal's frequency content during that specific time interval. By performing FFTs on isolated time segments of the signal, we can obtain a time-frequency representation which can be used to reconstruct the signal later on. This method is not perfect, however, since it requires a trade off between temporal and spectral resolution.
 
 
 
