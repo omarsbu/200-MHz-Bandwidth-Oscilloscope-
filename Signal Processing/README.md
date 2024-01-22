@@ -4,8 +4,10 @@ displays 10 horizontal divisions, then 1.28 us corresponds to 128 ns/div which i
 plots the first 640 samples from the ADC versus time on the display, following the trigger event. In order to display longer time per division settings, additional processing on the data is needed before 
 displaying the waveform on the screen. 
 
-At the maximum time per division setting of 1 second/div, the oscilloscope would display a 10 second span of data across a screen with 10 divisions. Given the current data rate of 6 Gbps, this would require 60 gigabits of memory to store all of the 
-samples before processing! Since we do not have enough memory to process all of the samples at once, we will need a buffer to process parts of the signal and then reconstruct the waveform from the segmented data. 
+At the maximum time per division setting of 1 second/div, the oscilloscope would display a 10 second span of data across a screen with 10 divisions. Given the current data rate of 6 Gbps, this would require 60 
+gigabits of memory to store all of the samples before processing them! Since we do not have enough memory to process all of the samples at once, we will need a buffer to process parts of the signal and then 
+reconstruct the waveform from the segmented data. In order to do this, we will need to obtain a time-frequency representation of the signal that will provide insight to how its various frequency components vary 
+over time. 
 
 
 
