@@ -24,4 +24,22 @@ The STFT involves taking a fragments (windows) of the signal and performing FFTs
 
 
 
+
+
+
+
+![image](https://github.com/omarsbu/200-MHz-Bandwidth-Oscilloscope-/assets/99481191/c853a4ef-ea9e-4de7-b548-086e6c528210)
+
+
+
+
+
+
+
+
+
+
+
+
+
 ![image](https://github.com/omarsbu/200-MHz-Bandwidth-Oscilloscope-/assets/99481191/7df976c4-fa5d-4c9b-aff6-5b584a3c8429)
