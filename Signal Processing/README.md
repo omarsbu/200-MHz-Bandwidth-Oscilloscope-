@@ -9,7 +9,17 @@ gigabits of memory to store all of the samples before processing them! Since we 
 
 The STFT involves taking a fragments (windows) of the signal and performing FFTs on them to obtain the signal's frequency content during specific time intervals. By performing FFTs on isolated time segments of the signal, we can obtain a time-frequency representation which can be used to reconstruct the signal later on. This method is not perfect, however, since the width of the window creates a trade off between temporal and spectral resolution. Shorter windows increase temporal resolution but reduce frequency resolution, while longer windows increase frequency resolution but reduce temporal resolution. This is because longer periods cannot fit inside of a narrow window so low frequency information becomes more uncertain when increasing time resolution. Conversely, longer periods can fit inside of a wider window at the cost of it being less localized in time. 
 
-The wavelet transform is similar to the Fourier transform, except it replaces the complex exponentials with localized oscillations in time called wavelets.  Specifically, our focus will center on Morlet wavelets, which are mathematically the same as a complex exponential multiplied by a Gaussian probability distribution function.
+The wavelet transform is similar to the Fourier transform, except it replaces the complex exponentials with localized oscillations in time called wavelets.  Specifically, our focus will center on Morlet wavelets, which are mathematically the same as a complex exponential multiplied by a Gaussian probability distribution function. By scaling the parameters of the wavelets and convolving them with the input signal, the wavelet transform can be used to reveal how the different frequency components in a signal behave over time. 
+
+
+
+
+
+
+
+
+
+
 
 
 
