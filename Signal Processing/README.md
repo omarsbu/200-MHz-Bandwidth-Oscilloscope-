@@ -15,7 +15,7 @@ Since hardware libraries for FFTs are more easily accessible, we will attempt to
 
 
 
-![image](https://github.com/omarsbu/200-MHz-Bandwidth-Oscilloscope-/assets/99481191/c853a4ef-ea9e-4de7-b548-086e6c528210)
+![image](https://github.com/omarsbu/200-MHz-Bandwidth-Oscilloscope-/assets/99481191/fdfa351c-0c80-41ee-ab75-d0f51af6e917)
 
 
 
