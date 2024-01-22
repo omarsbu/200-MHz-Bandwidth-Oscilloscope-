@@ -1,18 +1,29 @@
-For this project, we will be interleaving two 12-bit ADCs for a total sample rate of 500MHz, therefore we are looking at a total data rate of the 6 Gbps. In order to display the data we will be using the Basys 3
-FPGA board which supports a 12-bit color VGA video interface. Since the VGA controller we are using only has 640x480 resolution, we cannot plot anymore than 640 samples on the screen. This is fine if we only wish 
-to display 1.28 microeconds of a signal
-
-
-Since the VGA controller we are using only has 640x480 resolution, we cannot plot anymore than 640 samples on the screen. This is fine if we only wish 
-to display 1.28 microeconds of a signal
-
+For this project, we will be interleaving two 12-bit ADCs for a total sample rate of 500 Msps and a total data rate of 6 Gbsp. The VGA controller that we are using only has a resolution of 640x480 pixels, so we 
+cannot plot any more than 640 samples on the screen. The time interval in between each sample is 2 nanoseconds, therefore, 640 samples corresponds to a waveform that is 1.28 microseconds long. If the screen 
+displays 10 horizontal divisions, then 1.28 us corresponds to 128 ns/div which is the highest time resolution that this oscilloscope will be capable of. At this time per division setting, the oscilloscope simply 
+plots the first 640 samples from the ADC versus time on the display, following the trigger event. In order to display a longer time per division settings, additional processing on the data is needed before 
+displaying the waveform on the screen. 
 
 
 
 
 
-therefore we will need to perform some processing on the data before plotting it on the 
-display. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
