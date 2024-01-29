@@ -24,3 +24,21 @@ Since hardware libraries for FFTs are more readily avaiable, we will attempt to 
 
 
 ![image](https://github.com/omarsbu/200-MHz-Bandwidth-Oscilloscope-/assets/99481191/cbd18601-39e6-491b-ac89-863653ccd6d9)
+
+
+
+
+
+**Sources**
+
+https://users.rowan.edu/~polikar/WTtutorial.html
+
+https://www.youtube.com/watch?v=jnxqHcObNK4
+
+https://www.youtube.com/watch?v=ua2Fn1vkVqY&t=711s
+
+https://www.youtube.com/watch?v=T9x2rvdhaIE
+
+https://www.youtube.com/watch?v=I8_E1ppC3-Q
+
+https://www.youtube.com/watch?v=hewTwm5P0Gg
