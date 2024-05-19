@@ -19,7 +19,7 @@ int main()
 
 	/* Create Result File */
 	ofstream lut;
-	lut.open("pdf_lut.txt");
+	lut.open("windowFunc_LUT.txt");
 	//	lut << "address\tbyte value\tdecimal value\n";
 
 	int x = 0;	// number of bytes per row in result file
