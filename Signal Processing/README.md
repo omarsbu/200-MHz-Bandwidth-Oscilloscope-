@@ -27,6 +27,11 @@ Since hardware libraries for FFTs are more readily avaiable, we will attempt to 
 
 
 
+**Matlab Simulation**
+
+The Matlab script provided simulates a reconstruction of various signals by multiplying a section by a Gaussian PDF function with a standard deviation of 1 and then performing an FFT. The mean of the Gaussian PDF is shifted to isolate sections of the input signal and then perform an FFT on it. Each segment of the signal is reconstructed by performing an IFFT on the FFT result and the entire signal is reconstructed by combining all of the individual IFFTs of each segment. The following figure shows the result of running the Matlab script to simulate the reconstruction:
+
+![stft_reconstruct](https://github.com/omarsbu/200-MHz-Bandwidth-Oscilloscope-/assets/99481191/ab609da1-1095-4d80-9f81-734b0194c3f0)
 
 
 **Sources**
