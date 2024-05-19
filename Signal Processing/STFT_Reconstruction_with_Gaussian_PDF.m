@@ -6,7 +6,7 @@ fs = 1000;              % Sampling frequency in Hz
 t = 0:1/fs:duration;
 
 % Parameters for the Gaussian curve
-sigma = 10;     % Standard deviation
+sigma = 1;     % Standard deviation
 
 % Generate amplitude-modulated sine wave
 carrier_frequency = 10;         % Carrier frequency in Hz
