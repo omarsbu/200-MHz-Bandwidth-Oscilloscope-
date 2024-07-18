@@ -39,13 +39,9 @@ architecture tb_architecture of dds_w_freq_select_tb is
 	signal freq_val : std_logic_vector(a-1 downto 0);
 	signal load_freq : std_logic;
 	-- Observed signals - signals mapped to the output ports of tested entity
-	signal dac_sine_value : std_logic_vector(m downto 0);
+	signal freq_out : std_logic_vector(m-1 downto 0);
 
---	signal M_AXIS_DATA_0_tdata : STD_LOGIC_VECTOR (15 downto 0);
---    signal M_AXIS_DATA_0_tready : STD_LOGIC := '0';
     signal M_AXIS_DATA_0_tvalid : STD_LOGIC;
---    signal S_AXIS_PHASE_0_tdata : STD_LOGIC_VECTOR (15 downto 0);
---    signal S_AXIS_PHASE_0_tready : STD_LOGIC := '0';
     signal S_AXIS_PHASE_0_tvalid : STD_LOGIC;
 	
 	constant period : time := 1 us;
@@ -63,19 +59,12 @@ begin
 			reset => reset,
 			freq_val => freq_val,
 			load_freq => load_freq,
-			dac_sine_value => dac_sine_value,
---			M_AXIS_DATA_0_tdata => M_AXIS_DATA_0_tdata,
---            M_AXIS_DATA_0_tready => M_AXIS_DATA_0_tready,
+			freq_out => freq_out,
             M_AXIS_DATA_0_tvalid => M_AXIS_DATA_0_tvalid,
---            S_AXIS_PHASE_0_tdata => S_AXIS_PHASE_0_tdata,
---            S_AXIS_PHASE_0_tready => S_AXIS_PHASE_0_tready,
             S_AXIS_PHASE_0_tvalid => S_AXIS_PHASE_0_tvalid
 		);
 		
---	  S_AXIS_PHASE_0_tready <= '1';
 	  S_AXIS_PHASE_0_tvalid <= '1';
---  M_AXIS_DATA_0_tready <= '1';
---  M_AXIS_DATA_0_tvalid <= '1';
 	
 	-- insert integer value to observe a particular frequency
 	freq_val <= std_logic_vector(to_unsigned(2**13,a));

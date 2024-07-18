@@ -23,6 +23,11 @@
 ----------------------------------------------------------------------------------
 
 library ieee;
+----------------------------------------------------------------------------------
+-- Frequency Register
+----------------------------------------------------------------------------------
+
+library ieee;
 use ieee.std_logic_1164.all;
 
 entity frequency_reg is
@@ -123,7 +128,7 @@ entity TwosComp_to_Hex is
 		twos_comp_in : in std_logic_vector(m-1 downto 0);	-- 2's compliment input
 		hex_out : out std_logic_vector(m-1 downto 0)		-- Hexadecimal output to
 		);
-end adder_subtracter;
+end TwosComp_to_Hex;
 
 architecture behavioral of TwosComp_to_Hex is
 begin 
