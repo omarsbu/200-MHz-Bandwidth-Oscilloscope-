@@ -33,11 +33,11 @@ use ieee.std_logic_1164.all;
 entity frequency_reg is
 	generic (a : positive);
 	port(
-		load : in std_logic; -- enable register to load data
-		clk : in std_logic; -- system clock
-		reset : in std_logic; -- active low asynchronous reset
-		d : in std_logic_vector(a-1 downto 0); -- data input
-		q : out std_logic_vector(a-1 downto 0) -- register output
+		load : in std_logic; 				-- enable register to load data
+		clk : in std_logic; 				-- system clock
+		reset : in std_logic; 				-- active low asynchronous reset
+		d : in std_logic_vector(a-1 downto 0); 		-- data input
+		q : out std_logic_vector(a-1 downto 0) 		-- register output
 		);
 end frequency_reg;		 
 
@@ -68,8 +68,8 @@ use ieee.numeric_std.all;
 
 entity phase_accumulator is
 	generic(
-		a : positive;-- width of phase accumulator
-		m : positive -- width of phase accum output
+		a : positive;		-- width of phase accumulator
+		m : positive 		-- width of phase accum output
 		);
 	port(
 		clk : in std_logic; 					-- system clock		
@@ -122,7 +122,7 @@ use ieee.numeric_std.all;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity TwosComp_to_Hex is		
-   generic(m : positive);
+   generic(m : positive);	-- Width of input data
 	port (
 		pos : in std_logic;					-- 2's compliment MSB: 0b => positive; 1b => negative
 		twos_comp_in : in std_logic_vector(m-1 downto 0);	-- 2's compliment input
