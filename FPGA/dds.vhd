@@ -67,54 +67,43 @@ entity phase_accumulator is
 		m : positive -- width of phase accum output
 		);
 	port(
-		clk : in std_logic; -- system clock
-		reset : in std_logic; -- asynchronous reset
-		d : in std_logic_vector(a - 1 downto 0); -- count delta
-		pos : out std_logic;
-		q : out std_logic_vector(m - 1 downto 0) -- phase acc. output	 
+		clk : in std_logic; 					-- system clock		
+		reset : in std_logic; 					-- asynchronous reset
+		phase_inc : in std_logic_vector(a - 1 downto 0);	-- phase increment
+		pos : out std_logic;					-- Pos or neg half of sinusoid: 0b => 0-pi radians; 1b => pi-2pi radians 
+		phase_out : out std_logic_vector(m - 1 downto 0) 	-- phase accumulator output	 
 		);
 end phase_accumulator;		   
 
 architecture behavioral of phase_accumulator is	
-	signal temp : std_logic_vector(a downto 0);	-- stores roll around value for 1 clock
 	signal counter_reg : std_logic_vector(a-1 downto 0); 
-	signal p : std_logic;
+	signal pos_signal : std_logic;
 begin
 	process(clk, reset)
-		-- unsigned variables
 		variable count_var : unsigned(a-1 downto 0);
-		-- integer variables
-		variable max_count, min_count : integer;
-		variable delta : integer;
+		variable delta : integer;	-- Phase increment variable
 	begin
 		if reset = '1' then 
-			q <= (others => '0');				  
+			phase_out <= (others => '0');				  
 			counter_reg <= (others => '0');
-			temp <= (others => '0');
-			p <= '1';
+			pos_signal <= '0';
 		elsif rising_edge(clk) then	
-			-- convert d input to integer
-			delta := to_integer(unsigned(d));
-			
-			-- define limits
-			max_count := (2**a)-1-delta;	-- count + delta cannot exceed all 1's
-			min_count := delta;		-- count minus delta cannot go below all 0's 
-			
-			-- counter register	new value
-			count_var := unsigned(counter_reg);	-- store register value
-			
-			if count_var(a-1) = '1' then-- check for roll around		
-			    p <= '1';
+			delta := to_integer(unsigned(phase_inc));				
+			count_var := unsigned(counter_reg);	
+
+			-- Check for zero-crossing: Positive or Negative half of sinusoid?
+			if count_var(a-1) = '1' then		
+			    pos_signal <= '1';
 			else 
-			    p <= '0';					
+			    pos_signal <= '0';					
 			end if;		
             
-            count_var := count_var + unsigned(d);
+            		count_var := count_var + unsigned(phase_inc);	-- Update counter variable
             	
-			-- update counter register and output
+			-- Update signals and output ports
 			counter_reg <= std_logic_vector(count_var);
-			q <= counter_reg(a-1 downto (a-m));
-			pos <= p;
+			phase_out <= counter_reg(a-1 downto (a-m));
+			pos <= pos_signal;
 		end if;
 	end process;
 end behavioral;
@@ -127,32 +116,20 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
-entity adder_subtracter is		
+entity TwosComp_to_Hex is		
    generic(m : positive);
 	port (
-		pos : in std_logic;-- indicates pos. or neg. half of cycle
-		sine_value : in std_logic_vector(m-1 downto 0);-- from sine table
-		dac_sine_val : out std_logic_vector(m downto 0)-- output to DAC
+		pos : in std_logic;					-- 2's compliment MSB: 0b => positive; 1b => negative
+		twos_comp_in : in std_logic_vector(m-1 downto 0);	-- 2's compliment input
+		hex_out : out std_logic_vector(m-1 downto 0)		-- Hexadecimal output to
 		);
 end adder_subtracter;
 
-architecture behavioral of adder_subtracter is
+architecture behavioral of TwosComp_to_Hex is
 begin 
---	process(pos, sine_value)
---		variable x : unsigned (m downto 0);
---	begin	
---		x := unsigned ('1' & sine_value);
---		if pos = '0' then	
---			dac_sine_val <= '1' & sine_value(m-2 downto 0); 		
---		else
---			dac_sine_val <= '0' & sine_value(m-2 downto 0); 
---		end if;
---	end process;
-
-    dac_sine_val(m) <= not sine_value(m-1);
-    dac_sine_val(m-1 downto 1) <= sine_value(m-2 downto 0);
-    dac_sine_val(0) <= '1';
-
+	-- Flip MSB in 2's compliment representation
+	hex_out(m - 1) <= not twos_comp_in(m - 1);
+	hex_out (m-2 downto 0) <= twos_comp_in(m-2 downto 0);
 end behavioral;
 
 
@@ -164,27 +141,16 @@ use work.all;
 entity dds_w_freq_select is
 	generic (a : positive; m : positive);
 	 port(
-		 clk : in std_logic;-- system clock
-		 reset : in std_logic;-- asynchronous reset
-		 freq_val : in std_logic_vector(a - 1 downto 0);-- selects frequency
-		 load_freq : in std_logic;-- pulse to load a new frequency selection
-		 dac_sine_value : out std_logic_vector(m downto 0);-- output to DAC
-		 pos_sine : out std_logic; -- positive half of sine wave cycle
-		 
-		 -- MASTER AXIS DATA
---         M_AXIS_DATA_0_tdata : out STD_LOGIC_VECTOR (15 downto 0);
---         M_AXIS_DATA_0_tready : in STD_LOGIC;
-         M_AXIS_DATA_0_tvalid : out STD_LOGIC;
-         
-         -- MASTER AXIS PHASE
---         M_AXIS_PHASE_0_tdata : out STD_LOGIC_VECTOR (15 downto 0);
---         M_AXIS_PHASE_0_tready : in STD_LOGIC;
---         M_AXIS_PHASE_0_tvalid : out STD_LOGIC;
-      
-         -- SLAVE AXIS PHASE
---         S_AXIS_PHASE_0_tdata : in STD_LOGIC_VECTOR (15 downto 0);
---         S_AXIS_PHASE_0_tready : out STD_LOGIC;
-         S_AXIS_PHASE_0_tvalid : in STD_LOGIC		 		 
+		 clk : in std_logic;					-- system clock
+		 reset : in std_logic;					-- asynchronous reset
+		 freq_val : in std_logic_vector(a - 1 downto 0);	-- selects frequency (SLAVE AXIS TDATA)
+		 load_freq : in std_logic;				-- pulse to load a new frequency selection
+		 freq_out : out std_logic_vector(m - 1 downto 0);	-- output frequency (MASTER AXIS TDATA)
+		 pos_sine : out std_logic; 				-- positive half of sine wave cycle
+         	 M_AXIS_DATA_0_tvalid : out STD_LOGIC;			-- MASTER AXIS TVALID
+		 -- MASTER TLAST
+         	 S_AXIS_PHASE_0_tvalid : in STD_LOGIC			-- SLAVE AXIS TVALID	 		 
+		 -- SLAVE TREADY 		 
 		 );
 end dds_w_freq_select;
 
@@ -194,9 +160,9 @@ architecture structural of dds_w_freq_select is
   -- IP Block Diagram Component declaration
   component DDS_compiler
     port (
-      M_AXIS_DATA_0_tdata : out STD_LOGIC_VECTOR (15 downto 0);
+      M_AXIS_DATA_0_tdata : out STD_LOGIC_VECTOR (m-1 downto 0);
       M_AXIS_DATA_0_tvalid : out STD_LOGIC;
-      S_AXIS_PHASE_0_tdata : in STD_LOGIC_VECTOR (15 downto 0);
+      S_AXIS_PHASE_0_tdata : in STD_LOGIC_VECTOR (m-1 downto 0);
       S_AXIS_PHASE_0_tvalid : in STD_LOGIC;
       clk_in1_0 : in STD_LOGIC;
       reset_0 : in STD_LOGIC
@@ -206,14 +172,15 @@ architecture structural of dds_w_freq_select is
   -- DDS Internal Signals
 	signal s1 : std_logic_vector(a-1 downto 0);	    -- frequency input
 	signal s2 : std_logic_vector(a-1 downto 0);	    -- frequency register output
-	signal s3 : std_logic_vector(m-1 downto 0);	    -- DDS compiler sine table input
-	signal s4 : std_logic_vector(m-1 downto 0);	    -- DDS compiler sine table output
-	signal s5: std_logic;	                        -- phase accumulator fsm 'pos' output 
-	signal s6: std_logic_vector(m downto 0);	    -- dac sine value output	
+	signal s3 : std_logic_vector(m-1 downto 0);	    -- DDS compiler IP core input
+	signal s4 : std_logic_vector(m-1 downto 0);	    -- DDS compiler IP core output
+	signal s5: std_logic;	                            -- phase accumulator 'pos' output 
+	signal s6: std_logic_vector(m-1 downto 0);	    -- hexadecimal output	
 begin		 
 	s1 <= freq_val;
-			
-		u1: entity frequency_reg 
+
+	-- Instantiate frequency register
+	u1: entity frequency_reg 
 		generic map(a => a)
 		port map(
 			load => load_freq,
@@ -222,34 +189,36 @@ begin
 			d => s1,
 			q => s2);
 		
+	-- Instantiate phase accumulator
 	u2: entity phase_accumulator
 		generic map(a => a, m=> m)
 		port map(	 
 			clk => clk, 
 			reset => reset,
-			d => s2,
-			pos => s5,
-			q => s3);
-		
+			phase_inc => s2,	-- phase increment <= frequency register output 
+			pos => s5,	
+			phase_out => s3);	
+
+	-- Instantiate DDS compiler IP core
 	u3: DDS_compiler
-    port map (
-      M_AXIS_DATA_0_tdata => s4,
-      M_AXIS_DATA_0_tvalid => M_AXIS_DATA_0_tvalid,
-           
-      S_AXIS_PHASE_0_tdata => s3,
-      S_AXIS_PHASE_0_tvalid => S_AXIS_PHASE_0_tvalid,
-      
-      clk_in1_0 => clk,
-      reset_0 => reset
+    		port map (
+      		M_AXIS_DATA_0_tdata => s4,			-- DDS compiler IP core output data
+      		M_AXIS_DATA_0_tvalid => M_AXIS_DATA_0_tvalid,
+      		S_AXIS_PHASE_0_tdata => s3,			-- DDS compiler IP core input <= phase_out
+      		S_AXIS_PHASE_0_tvalid => S_AXIS_PHASE_0_tvalid,
+      		clk_in1_0 => clk,
+      		reset_0 => reset
     );
 	
-	u6: entity adder_subtracter
+	u6: entity TwosComp_to_Hex
 		generic map(m=> m)
 		port map(
-			pos => s5, 
-			sine_value => s4,
-			dac_sine_val => s6);
-		
-		pos_sine <= s5;
-		dac_sine_value <= s6;
+			pos => s5,
+			twos_comp_in => s4,	-- 2's comp input <= DDS compiler IP core output data
+			hex_out => s6);		-- Hexadecimal output of DDS system
+
+	-- Update output signals
+	pos_sine <= s5;
+	freq_out <= s6;
+	M_AXIS_DATA_0_tvalid <= '1';
 end structural;
