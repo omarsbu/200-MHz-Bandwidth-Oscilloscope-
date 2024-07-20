@@ -3,21 +3,16 @@
 ----------------------------------------------------------------------------------
 
 library ieee;
-----------------------------------------------------------------------------------
--- Frequency Register
-----------------------------------------------------------------------------------
-
-library ieee;
 use ieee.std_logic_1164.all;
 
 entity frequency_reg is
 	generic (a : positive);
 	port(
-		load : in std_logic; -- enable register to load data
-		clk : in std_logic; -- system clock
-		reset : in std_logic; -- active low asynchronous reset
-		d : in std_logic_vector(a-1 downto 0); -- data input
-		q : out std_logic_vector(a-1 downto 0) -- register output
+		load : in std_logic; 				-- enable register to load data
+		clk : in std_logic; 				-- system clock
+		reset : in std_logic; 				-- active low asynchronous reset
+		d : in std_logic_vector(a-1 downto 0); 		-- data input
+		q : out std_logic_vector(a-1 downto 0) 		-- register output
 		);
 end frequency_reg;		 
 
@@ -94,7 +89,7 @@ begin
 end behavioral;
 
 ----------------------------------------------------------------------------------
--- Adder Subtracter
+-- 2's Compliment to Hexadecimal
 ----------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
@@ -123,57 +118,49 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.all;
 
-entity dds_w_freq_select is
+entity dds_modulator is
 	generic (a : positive; m : positive);
 	 port(
 		 clk : in std_logic;					-- system clock
 		 reset : in std_logic;					-- asynchronous reset
-		 freq_val : in std_logic_vector(a - 1 downto 0);	-- selects frequency (SLAVE AXIS TDATA)
+		 freq_val : in std_logic_vector(a - 1 downto 0);	-- selects modulating frequency (SLAVE AXIS TDATA)
 		 load_freq : in std_logic;				-- pulse to load a new frequency selection
-		 freq_out : out std_logic_vector(2*m - 1 downto 0);	-- output frequency (MASTER AXIS TDATA)
+		 freq_in : in std_logic_vector (m - 1 downto 0);	-- input carrier frequency
+		 freq_out : out std_logic_vector(2*m - 1 downto 0);	-- modulated output frequency
 		 pos_sine : out std_logic; 				-- positive half of sine wave cycle
-         M_AXIS_DATA_0_tvalid : out STD_LOGIC;			-- MASTER AXIS TVALID
-         S_AXIS_PHASE_0_tvalid : in STD_LOGIC			-- SLAVE AXIS TVALID	 		  		 
+         	 M_AXIS_DATA_0_tvalid : out STD_LOGIC;			-- MASTER AXIS TVALID
+         	 S_AXIS_PHASE_0_tvalid : in STD_LOGIC			-- SLAVE AXIS TVALID	 		  		 
 		 );
-end dds_w_freq_select;
+end dds_modulator;
 
-
-architecture structural of dds_w_freq_select is
+architecture structural of dds_modulator is
 
   -- IP Block Diagram Component declaration
   component DDS_compiler
-    port (
-    
-    A_0 : in STD_LOGIC_VECTOR ( 15 downto 0 );
-    B_0 : in STD_LOGIC_VECTOR ( 15 downto 0 );
-    M_AXIS_DATA_0_tdata : out STD_LOGIC_VECTOR ( 15 downto 0 );
-    M_AXIS_DATA_0_tvalid : out STD_LOGIC;
-    P_0 : out STD_LOGIC_VECTOR ( 31 downto 0 );
-    S_AXIS_PHASE_0_tdata : in STD_LOGIC_VECTOR ( 15 downto 0 );
-    S_AXIS_PHASE_0_tvalid : in STD_LOGIC;
-    clk_in1_0 : in STD_LOGIC;
-    m_axis_data_tdata_0 : out STD_LOGIC_VECTOR ( 15 downto 0 );
-    reset_0 : in STD_LOGIC
-    
---      M_AXIS_DATA_0_tdata : out STD_LOGIC_VECTOR (m-1 downto 0);
- --     M_AXIS_DATA_0_tvalid : out STD_LOGIC;
-  --    S_AXIS_PHASE_0_tdata : in STD_LOGIC_VECTOR (m-1 downto 0);
-  --    S_AXIS_PHASE_0_tvalid : in STD_LOGIC;
-   --   clk_in1_0 : in STD_LOGIC;
-    --  reset_0 : in STD_LOGIC      
+    port ( 
+    	A_0 : in STD_LOGIC_VECTOR ( 15 downto 0 );
+    	B_0 : in STD_LOGIC_VECTOR ( 15 downto 0 );
+    	M_AXIS_DATA_0_tdata : out STD_LOGIC_VECTOR ( 15 downto 0 );
+    	M_AXIS_DATA_0_tvalid : out STD_LOGIC;
+    	P_0 : out STD_LOGIC_VECTOR ( 31 downto 0 );
+    	S_AXIS_PHASE_0_tdata : in STD_LOGIC_VECTOR ( 15 downto 0 );
+    	S_AXIS_PHASE_0_tvalid : in STD_LOGIC;
+    	clk_in1_0 : in STD_LOGIC;
+    	m_axis_data_tdata_0 : out STD_LOGIC_VECTOR ( 15 downto 0 );
+    	reset_0 : in STD_LOGIC
     );
   end component;
   
   -- DDS Internal Signals
-	signal s1 : std_logic_vector(a-1 downto 0);	    -- frequency input
-	signal s2 : std_logic_vector(a-1 downto 0);	    -- frequency register output
-	signal s3 : std_logic_vector(m-1 downto 0);	    -- DDS compiler IP core input
-	signal s4 : std_logic_vector(m-1 downto 0);	    -- DDS compiler IP core output
+	signal s1 : std_logic_vector(a-1 downto 0);     -- frequency input
+	signal s2 : std_logic_vector(a-1 downto 0);     -- frequency register output
+	signal s3 : std_logic_vector(m-1 downto 0);     -- modulating DDS compiler input
+	signal s4 : std_logic_vector(m-1 downto 0);     -- modulating DDS compiler output => 2's comliment
 	signal s5: std_logic;	                        -- phase accumulator 'pos' output 
-	signal s6: std_logic_vector(m-1 downto 0);	    -- hexadecimal output	
-	signal s7 : std_logic_vector(m-1 downto 0);     -- carrier signal => 2's comp
-	signal s8 : std_logic_vector(m-1 downto 0);     -- carrier signal => hexadecimal
-    signal s9 : std_logic_vector(2*m - 1 downto 0); -- modulated output	
+	signal s6: std_logic_vector(m-1 downto 0);	-- modulating frequency hexadecimal output	
+	signal s7 : std_logic_vector(m-1 downto 0);    	-- carrier frequency => 2's compliment
+	signal s8 : std_logic_vector(m-1 downto 0);     -- carrier frequency => hexadecimal
+    signal s9 : std_logic_vector(2*m - 1 downto 0); 	-- modulated output	
 begin		 
 	s1 <= freq_val;
 
@@ -197,33 +184,35 @@ begin
 			pos => s5,	
 			phase_out => s3);	
 
-	-- Instantiate DDS compiler IP core
-	u3: DDS_compiler
-    		port map (
-            A_0 => s6,
-            B_0 => s8,
-            M_AXIS_DATA_0_tdata => s4,
-            M_AXIS_DATA_0_tvalid => M_AXIS_DATA_0_tvalid,
-            P_0 => s9,
-            S_AXIS_PHASE_0_tdata => s3,
-            S_AXIS_PHASE_0_tvalid => S_AXIS_PHASE_0_tvalid,
-            clk_in1_0 => clk,
-            m_axis_data_tdata_0 => s7,
-            reset_0 => reset);
-            
-	u6: entity TwosComp_to_Hex
+	u3: entity TwosComp_to_Hex
 		generic map(m=> m)
 		port map(
 			pos => s5,
-			twos_comp_in => s4,	-- 2's comp input <= DDS compiler IP core output data
-			hex_out => s6);		-- Hexadecimal output of DDS system
+			twos_comp_in => s4,	-- Modulating DDS compiler 2's compliment value
+			hex_out => s6);		-- Modulating DDS compiler hexadecimal output
 
-	u7: entity TwosComp_to_Hex
+	u4: entity TwosComp_to_Hex
 		generic map(m=> m)
 		port map(
 			pos => s5,
-			twos_comp_in => s7,	-- 2's comp input <= DDS compiler IP core output data
-			hex_out => s8);		-- Hexadecimal output of DDS system
+			twos_comp_in => s7,	-- Carrier frequency 2's compliment value
+			hex_out => s8);		-- Carrier frequency hexadecimal value
+
+		
+	-- Instantiate DDS compiler IP core
+	u5: DDS_compiler
+    		port map (
+            		A_0 => s6,			-- Multiplier input A <= modulating frequency
+             		B_0 => s8,			-- Multiplier input B <= carrier frequency
+            		M_AXIS_DATA_0_tdata => s4,
+            		M_AXIS_DATA_0_tvalid => M_AXIS_DATA_0_tvalid,	
+            		P_0 => s9,			-- Multiplier output signal => modulated output 
+            		S_AXIS_PHASE_0_tdata => s3,	-- Modulating frequency phase accumulator value	
+            		S_AXIS_PHASE_0_tvalid => S_AXIS_PHASE_0_tvalid,
+            		clk_in1_0 => clk,
+            		m_axis_data_tdata_0 => s7,	-- carrier frequency <= output of test DDS_compiler
+            		reset_0 => reset);
+            	
 	-- Update output signals
 	pos_sine <= s5;
 	freq_out <= s9;
