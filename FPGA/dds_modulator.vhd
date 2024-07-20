@@ -253,13 +253,11 @@ dds_compiler_1: component DDS_compiler_dds_compiler_1_0
 mult_gen_0: component DDS_compiler_mult_gen_0_0
      port map (
       A(15 downto 0) => A_0_1(15 downto 0),
-
-
-
-
-
-
-
+      B(15 downto 0) => B_0_1(15 downto 0),
+      CLK => clk_wiz_0_clk_out1,
+      P(31 downto 0) => mult_gen_0_P(31 downto 0)
+    );
+end STRUCTURE;
 
 ----------------------------------------------------------------------------------
 -- DDS Modulator Top Level Entity
