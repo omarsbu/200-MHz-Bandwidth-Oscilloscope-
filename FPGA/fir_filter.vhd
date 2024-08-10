@@ -79,7 +79,6 @@ BEGIN
   y_out <= y(W3-1 DOWNTO W3-W4);  
 END behavioral;
 
-      
 ----------------------------------------------------------------------------------
 -- Coefficient Lookup Table
 ----------------------------------------------------------------------------------
@@ -105,26 +104,31 @@ architecture behavioral of coefficient_LUT is
 	type lut is array(0 to 2**a - 1) of std_logic_vector(w-1 downto 0);
 	signal coefficient_lut : lut;
 	-- File declaration
-	file coef_file : text open read_mode is "coefficients.txt";
+	file coef_file : text;
 begin	  
 
 -- Process to read the file and populate the LUT
 	process
 		variable line_buf : line;
 		variable data_buf : std_logic_vector(w-1 downto 0);
+		variable i : integer := 0;
 	begin
-		-- Read coefficients from the file and store them in the LUT
-		for i in 0 to 2**a - 1 loop
-			if not endfile(coef_file) then
-				readline(coef_file, line_buf);
-				read(line_buf, data_buf);
-				coefficient_lut(i) <= data_buf;
-			else
-				-- In case the file has fewer entries than expected, pad with zeros
-				coefficient_lut(i) <= (others => '0');
-			end if;
-		end loop;
-		wait;
+	   file_open(coef_file, "binary_filter_coefficients_truncated_to_n_bits.txt", read_mode);
+
+	   -- Populate LUT from txt file
+	   while not endfile(coef_file) loop
+	       readline(coef_file, line_buf);
+	       read (line_buf, data_buf);
+	       coefficient_lut(i) <= data_buf; 
+	       i := i +1 ;
+	   end loop;
+	   
+	   -- Pad remaining LUT entries with all 0s
+	   while i < 2**a loop
+	       coefficient_lut(i) <= (others => '0');
+	       i := i + 1;
+	   end loop;
+	   wait;
 	end process;	
 
 -- Process to output coefficient based on input address	
@@ -133,7 +137,6 @@ begin
 		coefficient_val <= coefficient_lut(to_integer(unsigned(address)));	
 	end process;
 end behavioral;
-
 
 
 ----------------------------------------------------------------------------------
