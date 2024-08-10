@@ -133,3 +133,42 @@ begin
 		coefficient_val <= coefficient_lut(to_integer(unsigned(address)));	
 	end process;
 end behavioral;
+
+
+
+----------------------------------------------------------------------------------
+-- Downsampler
+----------------------------------------------------------------------------------
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity down_sampler is
+    generic (a : positive);     -- Data width
+	port (
+	    clk : in std_logic;    -- clock signal
+	    reset : in std_logic;  -- reset signal
+		data_in : in std_logic_vector(a-1 downto 0);  -- Input data
+		decimation_factor : in std_logic_vector(a-1 downto 0);    -- Downsampling factor
+		data_out : out std_logic_vector(a-1 downto 0) -- Output data
+		);
+end down_sampler;
+
+architecture behavioral of down_sampler is
+    signal clk_counter :  std_logic_vector (a-1 downto 0);  -- clk cycle counter
+begin	  
+-- Process to increment clock cycle counter
+	process(clk, reset)   
+	begin
+	   if reset = '1' then
+	       clk_counter <= (others => '0');
+	   elsif rising_edge(clk) then
+	       if clk_counter = decimation_factor then
+	           clk_counter <= (others => '0');
+	           data_out <= data_in;
+           else
+	           clk_counter <= clk_counter + 1; -- increment clock cycle counter           
+	       end if;
+       end if;
+	end process;	
+end behavioral;
