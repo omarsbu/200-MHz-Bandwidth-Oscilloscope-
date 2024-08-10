@@ -2,7 +2,7 @@
 -- FIR Filter
 ----------------------------------------------------------------------------------
 
-library ieee;                -- Using predefined packages
+library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_signed.all;
