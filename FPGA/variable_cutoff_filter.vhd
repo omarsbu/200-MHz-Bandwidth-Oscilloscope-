@@ -151,10 +151,10 @@ entity down_sampler is
 	port (
 	    clk : in std_logic;    -- clock signal
 	    reset : in std_logic;  -- reset signal
-		data_in : in std_logic_vector(a-1 downto 0);  -- Input data
-		decimation_factor : in std_logic_vector(a-1 downto 0);    -- Downsampling factor
-		data_out : out std_logic_vector(a-1 downto 0) -- Output data
-		);
+	    data_in : in std_logic_vector(a-1 downto 0);  -- Input data
+	    decimation_factor : in std_logic_vector(a-1 downto 0);    -- Downsampling factor
+	    data_out : out std_logic_vector(a-1 downto 0) -- Output data
+	    );
 end down_sampler;
 
 architecture behavioral of down_sampler is
