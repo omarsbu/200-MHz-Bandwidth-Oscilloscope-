@@ -8,76 +8,76 @@ use ieee.std_logic_arith.all;
 use ieee.std_logic_signed.all;
 ----------------------------------------------------------
 entity fir_filter is          
-  generic (W1 : INTEGER;  -- Input bit width
-           W2 : INTEGER;  -- Multiplier bit width 2*W1
-           W3 : INTEGER;  -- Adder width = W2+log2(L)-1
-           W4 : INTEGER;  -- Output bit width
-           L  : INTEGER   -- Filter length 
+  generic (W1 : integer;  -- Input bit width
+           W2 : integer;  -- Multiplier bit width 2*W1
+           W3 : integer;  -- Adder width = W2+log2(L)-1
+           W4 : integer;  -- Output bit width
+           L  : integer   -- Filter length 
            );
-  port (clk    : IN STD_LOGIC;     -- System clock
-        reset  : IN STD_LOGIC;     -- Asynchron reset
-        Load_x : IN  STD_LOGIC;    -- Load/run switch
-        x_in   : IN  STD_LOGIC_VECTOR(W1-1 DOWNTO 0);  -- System input
-        c_in   : IN  STD_LOGIC_VECTOR(W1-1 DOWNTO 0);  -- Coefficient data input 
-        y_out  : OUT STD_LOGIC_VECTOR(W4-1 DOWNTO 0)); -- Coefficient output
-END fir_filter;
+  port (clk    : in std_logic;     -- System clock
+        reset  : in std_logic;     -- Asynchron reset
+        Load_x : in  std_logic;    -- Load/run switch
+        x_in   : in  std_logic_vector(W1-1 downto 0);  -- System input
+        c_in   : in  std_logic_vector(W1-1 downto 0);  -- Coefficient data input 
+        y_out  : out std_logic_vector(W4-1 downto 0)); -- Coefficient output
+end fir_filter;
 -- --------------------------------------------------------
 architecture behavioral of fir_filter is
-  subtype SLV_W1 IS STD_LOGIC_VECTOR(W1-1 DOWNTO 0);     -- Subtype with width of input signal
-  subtype SLV_W2 IS STD_LOGIC_VECTOR(W2-1 DOWNTO 0);     -- Subtype with width of multiplier
-  subtype SLV_W3 IS STD_LOGIC_VECTOR(W3-1 DOWNTO 0);     -- Subtype with width of adder
-  type A0_L1SLV_W1 IS ARRAY (0 TO L-1) OF SLV_W1;         -- Array of input signals
-  type A0_L1SLV_W2 IS ARRAY (0 TO L-1) OF SLV_W2;         -- Array of multiplier signals
-  type A0_L1SLV_W3 IS ARRAY (0 TO L-1) OF SLV_W3;         -- Array of adder signals
+  subtype SLV_W1 is std_logic_vector(W1-1 downto 0);     -- Subtype with width of input signal
+  subtype SLV_W2 is std_logic_vector(W2-1 downto 0);     -- Subtype with width of multiplier
+  subtype SLV_W3 is std_logic_vector(W3-1 downto 0);     -- Subtype with width of adder
+  type A0_L1SLV_W1 is array (0 to L-1) of SLV_W1;         -- Array of input signals
+  type A0_L1SLV_W2 is array (0 to L-1) of SLV_W2;         -- Array of multiplier signals
+  type A0_L1SLV_W3 is array (0 to L-1) of SLV_W3;         -- Array of adder signals
 
-  SIGNAL  x  :  SLV_W1;     -- Internal signal for current input sample
-  SIGNAL  y  :  SLV_W3;     -- Internal signal for current output sample  
-  SIGNAL  c  :  A0_L1SLV_W1 ;       -- Coefficient array RAM 
-  SIGNAL  p  :  A0_L1SLV_W2 ;       -- Product array RAM
-  SIGNAL  a  :  A0_L1SLV_W3 ;       -- Adder array RAM
+  signal  x  :  SLV_W1;     	    -- Internal signal for current input sample
+  signal  y  :  SLV_W3;      	    -- Internal signal for current output sample  
+  signal  c  :  A0_L1SLV_W1 ;       -- Coefficient array RAM 
+  signal  p  :  A0_L1SLV_W2 ;       -- Product array RAM
+  signal  a  :  A0_L1SLV_W3 ;       -- Adder array RAM
                                                         
-BEGIN
-  Load: PROCESS(clk, reset, c_in, c, x_in)            
-  BEGIN                   ------> Load data or coefficients
-    IF reset = '1' THEN -- clear data and coefficients register
-      x <= (OTHERS => '0');
-      FOR K IN 0 TO L-1 LOOP
-        c(K) <= (OTHERS => '0');
-      END LOOP; 
-    ELSIF rising_edge(clk) THEN  
-    IF Load_x = '0' THEN
+begin
+  Load:process(clk, reset, c_in, c, x_in)            
+  begin                   ------> Load data or coefficients
+    if reset = '1' then -- clear data and coefficients register
+      x <= (others => '0');
+      for k in 0 to L-1 loop
+        c(k) <= (others => '0');
+      end loop; 
+    elsif rising_edge(clk) then  
+    if Load_x = '0' then
       c(L-1) <= c_in;      -- Store coefficient in register
-      FOR I IN L-2 DOWNTO 0 LOOP  -- Coefficients shift one
+      for i in L-2 downto 0 loop  -- Coefficients shift one
         c(I) <= c(I+1);
-      END LOOP;
-    ELSE
+      end loop;
+    else
       x <= x_in;           -- Get one data sample at a time
-    END IF;
-    END IF;
-  END PROCESS Load;
+    end if;
+    end if;
+  end process Load;
 
-  SOP: PROCESS (clk, reset, a, p)-- Compute sum-of-products
-  BEGIN
-    IF reset = '1' THEN -- clear tap registers
-      FOR K IN 0 TO L-1 LOOP
-        a(K) <= (OTHERS => '0');
-      END LOOP; 
-    ELSIF rising_edge(clk) THEN
-    FOR I IN 0 TO L-2  LOOP      -- Compute the transposed
-      a(I) <= (p(I)(W2-1) & p(I)) + a(I+1); -- filter adds
-    END LOOP;
+  SOP: process (clk, reset, a, p)-- Compute sum-of-products
+  begin
+    if reset = '1' then -- clear tap registers
+      for k in 0 to L-1 loop
+        a(k) <= (others => '0');
+      end loop; 
+    elsif rising_edge(clk) then
+    for i in 0 to L-2  loop      -- Compute the transposed
+      a(i) <= (p(i)(W2-1) & p(i)) + a(i+1); -- filter adds
+    end loop;
     a(L-1) <= p(L-1)(W2-1) & p(L-1);     -- First TAP has 
-    END IF;                              -- only a register
+    end if;                              -- only a register
     y <= a(0);
-  END PROCESS SOP;
+  end process SOP;
 
   -- Instantiate L multipliers 
-  MulGen: FOR I IN 0 TO L-1 GENERATE  
+  MulGen: for i in 0 to L-1 generate  
     p(i) <= c(i) * x;
-  END GENERATE;
+  end generate;
 
-  y_out <= y(W3-1 DOWNTO W3-W4);  
-END behavioral;
+  y_out <= y(W3-1 downto W3-W4);  
+end behavioral;
 
 ----------------------------------------------------------------------------------
 -- Coefficient Lookup Table
