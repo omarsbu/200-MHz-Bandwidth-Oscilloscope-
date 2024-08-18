@@ -8,76 +8,76 @@ use ieee.std_logic_arith.all;
 use ieee.std_logic_signed.all;
 ----------------------------------------------------------
 entity fir_filter is          
-  generic (W1 : integer;  -- Input bit width
-           W2 : integer;  -- Multiplier bit width 2*W1
-           W3 : integer;  -- Adder width = W2+log2(L)-1
-           W4 : integer;  -- Output bit width
-           L  : integer   -- Filter length 
+  generic (W1 : INTEGER;  -- Input bit width
+           W2 : INTEGER;  -- Multiplier bit width 2*W1
+           W3 : INTEGER;  -- Adder width = W2+log2(L)-1
+           W4 : INTEGER;  -- Output bit width
+           L  : INTEGER   -- Filter length 
            );
-  port (clk    : in std_logic;     -- System clock
-        reset  : in std_logic;     -- Asynchron reset
-        Load_x : in  std_logic;    -- Load/run switch
-        x_in   : in  std_logic_vector(W1-1 downto 0);  -- System input
-        c_in   : in  std_logic_vector(W1-1 downto 0);  -- Coefficient data input 
-        y_out  : out std_logic_vector(W4-1 downto 0)); -- Coefficient output
-end fir_filter;
+  port (clk    : IN STD_LOGIC;     -- System clock
+        reset  : IN STD_LOGIC;     -- Asynchron reset
+        Load_x : IN  STD_LOGIC;    -- Load/run switch
+        x_in   : IN  STD_LOGIC_VECTOR(W1-1 DOWNTO 0);  -- System input
+        c_in   : IN  STD_LOGIC_VECTOR(W1-1 DOWNTO 0);  -- Coefficient data input 
+        y_out  : OUT STD_LOGIC_VECTOR(W4-1 DOWNTO 0)); -- Coefficient output
+END fir_filter;
 -- --------------------------------------------------------
 architecture behavioral of fir_filter is
-  subtype SLV_W1 is std_logic_vector(W1-1 downto 0);     -- Subtype with width of input signal
-  subtype SLV_W2 is std_logic_vector(W2-1 downto 0);     -- Subtype with width of multiplier
-  subtype SLV_W3 is std_logic_vector(W3-1 downto 0);     -- Subtype with width of adder
-  type A0_L1SLV_W1 is array (0 to L-1) of SLV_W1;         -- Array of input signals
-  type A0_L1SLV_W2 is array (0 to L-1) of SLV_W2;         -- Array of multiplier signals
-  type A0_L1SLV_W3 is array (0 to L-1) of SLV_W3;         -- Array of adder signals
+  subtype SLV_W1 IS STD_LOGIC_VECTOR(W1-1 DOWNTO 0);     -- Subtype with width of input signal
+  subtype SLV_W2 IS STD_LOGIC_VECTOR(W2-1 DOWNTO 0);     -- Subtype with width of multiplier
+  subtype SLV_W3 IS STD_LOGIC_VECTOR(W3-1 DOWNTO 0);     -- Subtype with width of adder
+  type A0_L1SLV_W1 IS ARRAY (0 TO L-1) OF SLV_W1;         -- Array of input signals
+  type A0_L1SLV_W2 IS ARRAY (0 TO L-1) OF SLV_W2;         -- Array of multiplier signals
+  type A0_L1SLV_W3 IS ARRAY (0 TO L-1) OF SLV_W3;         -- Array of adder signals
 
-  signal  x  :  SLV_W1;     	    -- Internal signal for current input sample
-  signal  y  :  SLV_W3;      	    -- Internal signal for current output sample  
-  signal  c  :  A0_L1SLV_W1 ;       -- Coefficient array RAM 
-  signal  p  :  A0_L1SLV_W2 ;       -- Product array RAM
-  signal  a  :  A0_L1SLV_W3 ;       -- Adder array RAM
+  SIGNAL  x  :  SLV_W1;     -- Internal signal for current input sample
+  SIGNAL  y  :  SLV_W3;     -- Internal signal for current output sample  
+  SIGNAL  c  :  A0_L1SLV_W1 ;       -- Coefficient array RAM 
+  SIGNAL  p  :  A0_L1SLV_W2 ;       -- Product array RAM
+  SIGNAL  a  :  A0_L1SLV_W3 ;       -- Adder array RAM
                                                         
-begin
-  Load:process(clk, reset, c_in, c, x_in)            
-  begin                   ------> Load data or coefficients
-    if reset = '1' then -- clear data and coefficients register
-      x <= (others => '0');
-      for k in 0 to L-1 loop
-        c(k) <= (others => '0');
-      end loop; 
-    elsif rising_edge(clk) then  
-    if Load_x = '0' then
+BEGIN
+  Load: PROCESS(clk, reset, c_in, c, x_in)            
+  BEGIN                   ------> Load data or coefficients
+    IF reset = '1' THEN -- clear data and coefficients register
+      x <= (OTHERS => '0');
+      FOR K IN 0 TO L-1 LOOP
+        c(K) <= (OTHERS => '0');
+      END LOOP; 
+    ELSIF rising_edge(clk) THEN  
+    IF Load_x = '0' THEN
       c(L-1) <= c_in;      -- Store coefficient in register
-      for i in L-2 downto 0 loop  -- Coefficients shift one
+      FOR I IN L-2 DOWNTO 0 LOOP  -- Coefficients shift one
         c(I) <= c(I+1);
-      end loop;
-    else
+      END LOOP;
+    ELSE
       x <= x_in;           -- Get one data sample at a time
-    end if;
-    end if;
-  end process Load;
+    END IF;
+    END IF;
+  END PROCESS Load;
 
-  SOP: process (clk, reset, a, p)-- Compute sum-of-products
-  begin
-    if reset = '1' then -- clear tap registers
-      for k in 0 to L-1 loop
-        a(k) <= (others => '0');
-      end loop; 
-    elsif rising_edge(clk) then
-    for i in 0 to L-2  loop      -- Compute the transposed
-      a(i) <= (p(i)(W2-1) & p(i)) + a(i+1); -- filter adds
-    end loop;
+  SOP: PROCESS (clk, reset, a, p)-- Compute sum-of-products
+  BEGIN
+    IF reset = '1' THEN -- clear tap registers
+      FOR K IN 0 TO L-1 LOOP
+        a(K) <= (OTHERS => '0');
+      END LOOP; 
+    ELSIF rising_edge(clk) THEN
+    FOR I IN 0 TO L-2  LOOP      -- Compute the transposed
+      a(I) <= (p(I)(W2-1) & p(I)) + a(I+1); -- filter adds
+    END LOOP;
     a(L-1) <= p(L-1)(W2-1) & p(L-1);     -- First TAP has 
-    end if;                              -- only a register
+    END IF;                              -- only a register
     y <= a(0);
-  end process SOP;
+  END PROCESS SOP;
 
   -- Instantiate L multipliers 
-  MulGen: for i in 0 to L-1 generate  
+  MulGen: FOR I IN 0 TO L-1 GENERATE  
     p(i) <= c(i) * x;
-  end generate;
+  END GENERATE;
 
-  y_out <= y(W3-1 downto W3-W4);  
-end behavioral;
+  y_out <= y(W3-1 DOWNTO W3-W4);  
+END behavioral;
 
 ----------------------------------------------------------------------------------
 -- Coefficient Lookup Table
@@ -151,10 +151,10 @@ entity down_sampler is
 	port (
 	    clk : in std_logic;    -- clock signal
 	    reset : in std_logic;  -- reset signal
-	    data_in : in std_logic_vector(a-1 downto 0);  -- Input data
-	    decimation_factor : in std_logic_vector(a-1 downto 0);    -- Downsampling factor
-	    data_out : out std_logic_vector(a-1 downto 0) -- Output data
-	    );
+		data_in : in std_logic_vector(a-1 downto 0);  -- Input data
+		decimation_factor : in std_logic_vector(a-1 downto 0);    -- Downsampling factor
+		data_out : out std_logic_vector(a-1 downto 0) -- Output data
+		);
 end down_sampler;
 
 architecture behavioral of down_sampler is
@@ -196,32 +196,22 @@ library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
 entity dds_modulator is
   port (
-    A_1 : in STD_LOGIC_VECTOR ( 17 downto 0 );
-    B_0 : in STD_LOGIC_VECTOR ( 17 downto 0 );
+    A_0 : in STD_LOGIC_VECTOR ( 11 downto 0 );
+    B_0 : in STD_LOGIC_VECTOR ( 11 downto 0 );
+    CLK_0 : in STD_LOGIC;
     M_AXIS_DATA_0_tdata : out STD_LOGIC_VECTOR ( 15 downto 0 );
     M_AXIS_DATA_0_tvalid : out STD_LOGIC;
     P_0 : out STD_LOGIC_VECTOR ( 23 downto 0 );
     S_AXIS_PHASE_0_tdata : in STD_LOGIC_VECTOR ( 15 downto 0 );
-    S_AXIS_PHASE_0_tvalid : in STD_LOGIC;
-    clk_in1_0 : in STD_LOGIC;
-    reset_0 : in STD_LOGIC
+    S_AXIS_PHASE_0_tvalid : in STD_LOGIC
   );
   attribute CORE_GENERATION_INFO : string;
-  attribute CORE_GENERATION_INFO of dds_modulator : entity is "dds_modulator,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=dds_modulator,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=3,numReposBlks=3,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=0,numPkgbdBlks=0,bdsource=USER,synth_mode=Hierarchical}";
+  attribute CORE_GENERATION_INFO of dds_modulator : entity is "dds_modulator,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=dds_modulator,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=2,numReposBlks=2,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=0,numPkgbdBlks=0,bdsource=USER,synth_mode=Hierarchical}";
   attribute HW_HANDOFF : string;
   attribute HW_HANDOFF of dds_modulator : entity is "dds_modulator.hwdef";
 end dds_modulator;
 
 architecture STRUCTURE of dds_modulator is
-  component dds_modulator_dds_compiler_0_0 is
-  port (
-    aclk : in STD_LOGIC;
-    s_axis_phase_tvalid : in STD_LOGIC;
-    s_axis_phase_tdata : in STD_LOGIC_VECTOR ( 15 downto 0 );
-    m_axis_data_tvalid : out STD_LOGIC;
-    m_axis_data_tdata : out STD_LOGIC_VECTOR ( 15 downto 0 )
-  );
-  end component dds_modulator_dds_compiler_0_0;
   component dds_modulator_mult_gen_0_0 is
   port (
     CLK : in STD_LOGIC;
@@ -230,63 +220,51 @@ architecture STRUCTURE of dds_modulator is
     P : out STD_LOGIC_VECTOR ( 23 downto 0 )
   );
   end component dds_modulator_mult_gen_0_0;
-  component dds_modulator_clk_wiz_0_0 is
+  component dds_modulator_dds_compiler_0_1 is
   port (
-    reset : in STD_LOGIC;
-    clk_in1 : in STD_LOGIC;
-    clk_out1 : out STD_LOGIC;
-    locked : out STD_LOGIC
+    aclk : in STD_LOGIC;
+    s_axis_phase_tvalid : in STD_LOGIC;
+    s_axis_phase_tdata : in STD_LOGIC_VECTOR ( 15 downto 0 );
+    m_axis_data_tvalid : out STD_LOGIC;
+    m_axis_data_tdata : out STD_LOGIC_VECTOR ( 15 downto 0 )
   );
-  end component dds_modulator_clk_wiz_0_0;
-  signal A_1_1 : STD_LOGIC_VECTOR ( 17 downto 0 );
-  signal B_0_1 : STD_LOGIC_VECTOR ( 17 downto 0 );
+  end component dds_modulator_dds_compiler_0_1;
+  signal A_0_1 : STD_LOGIC_VECTOR ( 11 downto 0 );
+  signal B_0_1 : STD_LOGIC_VECTOR ( 11 downto 0 );
+  signal CLK_0_1 : STD_LOGIC;
   signal S_AXIS_PHASE_0_1_TDATA : STD_LOGIC_VECTOR ( 15 downto 0 );
   signal S_AXIS_PHASE_0_1_TVALID : STD_LOGIC;
-  signal clk_in1_0_1 : STD_LOGIC;
-  signal clk_wiz_0_clk_out1 : STD_LOGIC;
   signal dds_compiler_0_M_AXIS_DATA_TDATA : STD_LOGIC_VECTOR ( 15 downto 0 );
   signal dds_compiler_0_M_AXIS_DATA_TVALID : STD_LOGIC;
   signal mult_gen_0_P : STD_LOGIC_VECTOR ( 23 downto 0 );
-  signal reset_0_1 : STD_LOGIC;
-  signal NLW_clk_wiz_0_locked_UNCONNECTED : STD_LOGIC;
   attribute X_INTERFACE_INFO : string;
+  attribute X_INTERFACE_INFO of CLK_0 : signal is "xilinx.com:signal:clock:1.0 CLK.CLK_0 CLK";
+  attribute X_INTERFACE_PARAMETER : string;
+  attribute X_INTERFACE_PARAMETER of CLK_0 : signal is "XIL_INTERFACENAME CLK.CLK_0, ASSOCIATED_BUSIF S_AXIS_PHASE_0:M_AXIS_DATA_0, CLK_DOMAIN dds_modulator_CLK_0, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, INSERT_VIP 0, PHASE 0.0";
   attribute X_INTERFACE_INFO of M_AXIS_DATA_0_tvalid : signal is "xilinx.com:interface:axis:1.0 M_AXIS_DATA_0 TVALID";
   attribute X_INTERFACE_INFO of S_AXIS_PHASE_0_tvalid : signal is "xilinx.com:interface:axis:1.0 S_AXIS_PHASE_0 TVALID";
-  attribute X_INTERFACE_INFO of clk_in1_0 : signal is "xilinx.com:signal:clock:1.0 CLK.CLK_IN1_0 CLK";
-  attribute X_INTERFACE_PARAMETER : string;
-  attribute X_INTERFACE_PARAMETER of clk_in1_0 : signal is "XIL_INTERFACENAME CLK.CLK_IN1_0, CLK_DOMAIN dds_modulator_clk_in1_0, FREQ_HZ 100000000, FREQ_TOLERANCE_HZ 0, INSERT_VIP 0, PHASE 0.0";
-  attribute X_INTERFACE_INFO of reset_0 : signal is "xilinx.com:signal:reset:1.0 RST.RESET_0 RST";
-  attribute X_INTERFACE_PARAMETER of reset_0 : signal is "XIL_INTERFACENAME RST.RESET_0, INSERT_VIP 0, POLARITY ACTIVE_HIGH";
-  attribute X_INTERFACE_INFO of A_1 : signal is "xilinx.com:signal:data:1.0 DATA.A_1 DATA";
-  attribute X_INTERFACE_PARAMETER of A_1 : signal is "XIL_INTERFACENAME DATA.A_1, LAYERED_METADATA undef";
+  attribute X_INTERFACE_INFO of A_0 : signal is "xilinx.com:signal:data:1.0 DATA.A_0 DATA";
+  attribute X_INTERFACE_PARAMETER of A_0 : signal is "XIL_INTERFACENAME DATA.A_0, LAYERED_METADATA undef";
   attribute X_INTERFACE_INFO of B_0 : signal is "xilinx.com:signal:data:1.0 DATA.B_0 DATA";
   attribute X_INTERFACE_PARAMETER of B_0 : signal is "XIL_INTERFACENAME DATA.B_0, LAYERED_METADATA undef";
   attribute X_INTERFACE_INFO of M_AXIS_DATA_0_tdata : signal is "xilinx.com:interface:axis:1.0 M_AXIS_DATA_0 TDATA";
-  attribute X_INTERFACE_PARAMETER of M_AXIS_DATA_0_tdata : signal is "XIL_INTERFACENAME M_AXIS_DATA_0, FREQ_HZ 100000000, HAS_TKEEP 0, HAS_TLAST 0, HAS_TREADY 0, HAS_TSTRB 0, INSERT_VIP 0, LAYERED_METADATA xilinx.com:interface:datatypes:1.0 {TDATA {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type automatic dependency {} format long minimum {} maximum {}} value 12} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} array_type {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value chan} size {attribs {resolve_type generated dependency chan_size format long minimum {} maximum {}} value 1} stride {attribs {resolve_type generated dependency chan_stride format long minimum {} maximum {}} value 16} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type automatic dependency {} format long minimum {} maximum {}} value 12} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} struct {field_cosine {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value cosine} enabled {attribs {resolve_type generated dependency cosine_enabled format bool minimum {} maximum {}} value false} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency cosine_width format long minimum {} maximum {}} value 0} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} real {fixed {fractwidth {attribs {resolve_type generated dependency cosine_fractwidth format long minimum {} maximum {}} value 11} signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value true}}}}} field_sine {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value sine} enabled {attribs {resolve_type generated dependency sine_enabled format bool minimum {} maximum {}} value true} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency sine_width format long minimum {} maximum {}} value 12} bitoffset {attribs {resolve_type generated dependency sine_offset format long minimum {} maximum {}} value 0} real {fixed {fractwidth {attribs {resolve_type generated dependency sine_fractwidth format long minimum {} maximum {}} value 11} signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value true}}}}}}}}}} TDATA_WIDTH 16 TUSER {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type automatic dependency {} format long minimum {} maximum {}} value 0} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} struct {field_chanid {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value chanid} enabled {attribs {resolve_type generated dependency chanid_enabled format bool minimum {} maximum {}} value false} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency chanid_width format long minimum {} maximum {}} value 0} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value false}}}} field_user {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value user} enabled {attribs {resolve_type generated dependency user_enabled format bool minimum {} maximum {}} value false} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency user_width format long minimum {} maximum {}} value 0} bitoffset {attribs {resolve_type generated dependency user_offset format long minimum {} maximum {}} value 0}}}}}} TUSER_WIDTH 0}, PHASE 0.0, TDATA_NUM_BYTES 2, TDEST_WIDTH 0, TID_WIDTH 0, TUSER_WIDTH 0";
+  attribute X_INTERFACE_PARAMETER of M_AXIS_DATA_0_tdata : signal is "XIL_INTERFACENAME M_AXIS_DATA_0, CLK_DOMAIN dds_modulator_CLK_0, FREQ_HZ 100000000, HAS_TKEEP 0, HAS_TLAST 0, HAS_TREADY 0, HAS_TSTRB 0, INSERT_VIP 0, LAYERED_METADATA xilinx.com:interface:datatypes:1.0 {TDATA {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type automatic dependency {} format long minimum {} maximum {}} value 12} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} array_type {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value chan} size {attribs {resolve_type generated dependency chan_size format long minimum {} maximum {}} value 1} stride {attribs {resolve_type generated dependency chan_stride format long minimum {} maximum {}} value 16} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type automatic dependency {} format long minimum {} maximum {}} value 12} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} struct {field_cosine {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value cosine} enabled {attribs {resolve_type generated dependency cosine_enabled format bool minimum {} maximum {}} value false} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency cosine_width format long minimum {} maximum {}} value 0} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} real {fixed {fractwidth {attribs {resolve_type generated dependency cosine_fractwidth format long minimum {} maximum {}} value 11} signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value true}}}}} field_sine {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value sine} enabled {attribs {resolve_type generated dependency sine_enabled format bool minimum {} maximum {}} value true} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency sine_width format long minimum {} maximum {}} value 12} bitoffset {attribs {resolve_type generated dependency sine_offset format long minimum {} maximum {}} value 0} real {fixed {fractwidth {attribs {resolve_type generated dependency sine_fractwidth format long minimum {} maximum {}} value 11} signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value true}}}}}}}}}} TDATA_WIDTH 16 TUSER {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type automatic dependency {} format long minimum {} maximum {}} value 0} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} struct {field_chanid {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value chanid} enabled {attribs {resolve_type generated dependency chanid_enabled format bool minimum {} maximum {}} value false} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency chanid_width format long minimum {} maximum {}} value 0} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type immediate dependency {} format bool minimum {} maximum {}} value false}}}} field_user {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value user} enabled {attribs {resolve_type generated dependency user_enabled format bool minimum {} maximum {}} value false} datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value {}} bitwidth {attribs {resolve_type generated dependency user_width format long minimum {} maximum {}} value 0} bitoffset {attribs {resolve_type generated dependency user_offset format long minimum {} maximum {}} value 0}}}}}} TUSER_WIDTH 0}, PHASE 0.0, TDATA_NUM_BYTES 2, TDEST_WIDTH 0, TID_WIDTH 0, TUSER_WIDTH 0";
   attribute X_INTERFACE_INFO of P_0 : signal is "xilinx.com:signal:data:1.0 DATA.P_0 DATA";
   attribute X_INTERFACE_PARAMETER of P_0 : signal is "XIL_INTERFACENAME DATA.P_0, LAYERED_METADATA xilinx.com:interface:datatypes:1.0 {DATA {datatype {name {attribs {resolve_type immediate dependency {} format string minimum {} maximum {}} value data} bitwidth {attribs {resolve_type generated dependency bitwidth format long minimum {} maximum {}} value 24} bitoffset {attribs {resolve_type immediate dependency {} format long minimum {} maximum {}} value 0} integer {signed {attribs {resolve_type generated dependency signed format bool minimum {} maximum {}} value FALSE}}}} DATA_WIDTH 24}";
   attribute X_INTERFACE_INFO of S_AXIS_PHASE_0_tdata : signal is "xilinx.com:interface:axis:1.0 S_AXIS_PHASE_0 TDATA";
-  attribute X_INTERFACE_PARAMETER of S_AXIS_PHASE_0_tdata : signal is "XIL_INTERFACENAME S_AXIS_PHASE_0, FREQ_HZ 100000000, HAS_TKEEP 0, HAS_TLAST 0, HAS_TREADY 0, HAS_TSTRB 0, INSERT_VIP 0, LAYERED_METADATA undef, PHASE 0.0, TDATA_NUM_BYTES 2, TDEST_WIDTH 0, TID_WIDTH 0, TUSER_WIDTH 0";
+  attribute X_INTERFACE_PARAMETER of S_AXIS_PHASE_0_tdata : signal is "XIL_INTERFACENAME S_AXIS_PHASE_0, CLK_DOMAIN dds_modulator_CLK_0, FREQ_HZ 100000000, HAS_TKEEP 0, HAS_TLAST 0, HAS_TREADY 0, HAS_TSTRB 0, INSERT_VIP 0, LAYERED_METADATA undef, PHASE 0.0, TDATA_NUM_BYTES 2, TDEST_WIDTH 0, TID_WIDTH 0, TUSER_WIDTH 0";
 begin
-  A_1_1(17 downto 0) <= A_1(17 downto 0);
-  B_0_1(17 downto 0) <= B_0(17 downto 0);
+  A_0_1(11 downto 0) <= A_0(11 downto 0);
+  B_0_1(11 downto 0) <= B_0(11 downto 0);
+  CLK_0_1 <= CLK_0;
   M_AXIS_DATA_0_tdata(15 downto 0) <= dds_compiler_0_M_AXIS_DATA_TDATA(15 downto 0);
   M_AXIS_DATA_0_tvalid <= dds_compiler_0_M_AXIS_DATA_TVALID;
   P_0(23 downto 0) <= mult_gen_0_P(23 downto 0);
   S_AXIS_PHASE_0_1_TDATA(15 downto 0) <= S_AXIS_PHASE_0_tdata(15 downto 0);
   S_AXIS_PHASE_0_1_TVALID <= S_AXIS_PHASE_0_tvalid;
-  clk_in1_0_1 <= clk_in1_0;
-  reset_0_1 <= reset_0;
-clk_wiz_0: component dds_modulator_clk_wiz_0_0
+dds_compiler_0: component dds_modulator_dds_compiler_0_1
      port map (
-      clk_in1 => clk_in1_0_1,
-      clk_out1 => clk_wiz_0_clk_out1,
-      locked => NLW_clk_wiz_0_locked_UNCONNECTED,
-      reset => reset_0_1
-    );
-dds_compiler_0: component dds_modulator_dds_compiler_0_0
-     port map (
-      aclk => clk_wiz_0_clk_out1,
+      aclk => CLK_0_1,
       m_axis_data_tdata(15 downto 0) => dds_compiler_0_M_AXIS_DATA_TDATA(15 downto 0),
       m_axis_data_tvalid => dds_compiler_0_M_AXIS_DATA_TVALID,
       s_axis_phase_tdata(15 downto 0) => S_AXIS_PHASE_0_1_TDATA(15 downto 0),
@@ -294,12 +272,13 @@ dds_compiler_0: component dds_modulator_dds_compiler_0_0
     );
 mult_gen_0: component dds_modulator_mult_gen_0_0
      port map (
-      A(11 downto 0) => A_1_1(11 downto 0),
+      A(11 downto 0) => A_0_1(11 downto 0),
       B(11 downto 0) => B_0_1(11 downto 0),
-      CLK => clk_wiz_0_clk_out1,
+      CLK => CLK_0_1,
       P(23 downto 0) => mult_gen_0_P(23 downto 0)
     );
 end STRUCTURE;
+
 
 ----------------------------------------------------------------------------------
 -- Frequency Register
@@ -427,35 +406,24 @@ entity variable_fir_filter is
 		 );
 end variable_fir_filter;
 
-architecture structural of variable_fir_filter is
-
-  -- IP Block Diagram Component declaration
-  component dds_modulator
-    port ( 
-    	A_0 : in STD_LOGIC_VECTOR ( 11 downto 0 );
-    	B_0 : in STD_LOGIC_VECTOR ( 11 downto 0 );
-    	M_AXIS_DATA_0_tdata : out STD_LOGIC_VECTOR ( 11 downto 0 );
-    	M_AXIS_DATA_0_tvalid : out STD_LOGIC;
-    	P_0 : out STD_LOGIC_VECTOR ( 23 downto 0 );
-    	S_AXIS_PHASE_0_tdata : in STD_LOGIC_VECTOR ( 11 downto 0 );
-    	S_AXIS_PHASE_0_tvalid : in STD_LOGIC;
-    	clk_in1_0 : in STD_LOGIC;
-    	reset_0 : in STD_LOGIC
-    );
-  end component;
-  
+architecture structural of variable_fir_filter is 
   -- Internal Signals
 	signal s1_cutoff_freq : std_logic_vector(a-1 downto 0);           -- filter cutoff frequency input
 	signal s2_phase_inc : std_logic_vector(a-1 downto 0);             -- DDS phase accumulator phase increment 
 	signal s3_phase_out : std_logic_vector(a-1 downto 0);             -- DDS phase accumulator output signal
-	signal s4_dds_out : std_logic_vector(w-1 downto 0);               -- DDS synthesizer output signal
+	signal s4_dds_out : std_logic_vector(15 downto 0);               -- DDS synthesizer output signal
 	signal s5_fir_coeff_lut_out : std_logic_vector(w-1 downto 0);     -- FIR coefficient LUT output signal
 	signal s6_fir_coeff_lut_addr : std_logic_vector(a-1 downto 0);    -- FIR coefficient LUT address signal
-    signal s7_coeff_mod_2s_comp : std_logic_vector(w-1 downto 0);	  -- Modulated FIR filter coefficients (2's compliment)
+    signal s7_coeff_mod_2s_comp : std_logic_vector(23 downto 0);	  -- Modulated FIR filter coefficients (2's compliment)
 	signal s8_coeff_mod_hex : std_logic_vector(w-1 downto 0);         -- Modulated FIR filter coefficients (hexadecimal)
+	
+	signal reg1 : std_logic_vector(15 downto 0);      -- s3
+	signal reg2 : std_logic_vector(w-1 downto 0);      -- s4
+	signal reg3 : std_logic_vector(w-1 downto 0);      -- s7
+
 begin		 
 	s1_cutoff_freq <= filter_cutoff;
-    
+
 	-- Instantiate frequency register
 	u1: entity frequency_reg 
 		generic map(a => a)
@@ -474,19 +442,26 @@ begin
 			reset => reset,
 			phase_inc => s2_phase_inc,	-- phase increment <= frequency register output 
 			phase_out => s3_phase_out);	
-		
+    
+    reg1(15 downto 4) <= s3_phase_out;
+	reg1(4 downto 0) <= (others => '0'); 
+	s6_fir_coeff_lut_addr <= s3_phase_out;
+	
 	-- Instantiate IP Block Diagram
-	u3: dds_modulator
+	u3: entity dds_modulator
     	port map(
-            A_0 => s4_dds_out,
             B_0 => s5_fir_coeff_lut_out,
-            M_AXIS_DATA_0_tdata(15 downto (16-w)) => s4_dds_out,
+            A_0 => reg2,
+            M_AXIS_DATA_0_tdata => s4_dds_out ,
             M_AXIS_DATA_0_tvalid => M_AXIS_DATA_0_tvalid,
-            P_0 => s7_coeff_mod_2s_comp (23 downto (23-w)),
-            S_AXIS_PHASE_0_tdata(15 downto (16-w)) => s3_phase_out,
+            P_0 => s7_coeff_mod_2s_comp,
+            S_AXIS_PHASE_0_tdata => reg1,
             S_AXIS_PHASE_0_tvalid => S_AXIS_PHASE_0_tvalid,
-            clk_in1_0 => clk,
-            reset_0 => reset);	
+            CLK_0 => clk);
+--            reset_0 => reset);	
+    
+    reg2 <= s4_dds_out(15 downto (16-w));
+    reg3 <= s7_coeff_mod_2s_comp(23 downto 12);	    
     
     -- Instantiate FIR filter coefficient LU
     u4: entity coefficient_LUT 
@@ -503,7 +478,7 @@ begin
         reset => reset,
         Load_x => load_filter_cutoff,
         x_in => input_signal,
-        c_in => s7_coeff_mod_2s_comp,        
+        c_in => reg3,        
         y_out => output_signal);  
 
 end structural;
