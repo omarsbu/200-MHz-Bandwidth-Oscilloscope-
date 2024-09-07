@@ -100,14 +100,15 @@ entity DOWN_SAMPLER is
 end DOWN_SAMPLER;
 
 architecture Behavioral of DOWN_SAMPLER is
-    signal clk_counter :  std_logic_vector (data_WIDTH-1 downto 0);  -- clk cycle counter
+    signal clk_counter :  std_logic_vector (data_WIDTH-1 downto 0) := (others => '0');  -- clk cycle counter
 begin	  
     -- Process to increment clock cycle counter and check 
-	process(clk, reset)   
+	process(clk)   
 	begin
 	   if rising_edge(clk) then
 	       if reset = '1' then
 	           clk_counter <= (others => '0'); 
+               data_out <= (others => '0'); -- Reset data_out
 	       elsif clk_counter = decimation_factor then
 	           clk_counter <= (others => '0');     -- Reset counter 
 	           data_out <= data_in;    -- Pass input to output
@@ -128,7 +129,7 @@ USE IEEE.NUMERIC_STD.ALL;
 USE WORK.ALL;
 
 entity IIR_DECIMATOR is
-    generic (data_WIDTH : positive; L : positive; decimation : positive);
+    generic (data_WIDTH : positive; L : positive);
     port(
         clk : in std_logic;	
         reset : in std_logic;					                
@@ -182,7 +183,7 @@ USE IEEE.NUMERIC_STD.ALL;
 USE WORK.ALL;
 
 entity MULTISTAGE_IIR_DECIMATOR is
-    generic (data_WIDTH : positive; L : positive; decimation : positive; N : integer);
+    generic (data_WIDTH : positive; L : positive; N : integer);
     port(
         clk : in std_logic;	
         reset : in std_logic;					                
@@ -192,9 +193,7 @@ entity MULTISTAGE_IIR_DECIMATOR is
         a_in : in std_logic_vector(data_WIDTH - 1 downto 0);
         b_in : in std_logic_vector(data_WIDTH - 1 downto 0);
         y_out : out std_logic_vector(data_WIDTH - 1 downto 0);
-        decimation_factor : in std_logic_vector(data_WIDTH - 1 downto 0);
-        M_AXIS_tvalid : out std_logic;
-        S_AXIS_tvalid : in std_logic
+        decimation_factor : in std_logic_vector(data_WIDTH - 1 downto 0)
     );
 end MULTISTAGE_IIR_DECIMATOR;
 
@@ -202,27 +201,19 @@ architecture MULTISTAGE of MULTISTAGE_IIR_DECIMATOR is
     subtype SLV_data_WIDTH is std_logic_vector(data_WIDTH - 1 downto 0);
     type RAM_N is array (0 to N-1) of SLV_data_WIDTH;
     
-    -- A '1' in bit position n corresponds to stage n
-    signal stage_pointer : std_logic_vector(N - 1 downto 0);
-  
     -- DEMUX top level signals for each stage 
-    signal x_n, a_n, b_n, y_n, d_n : RAM_N; 
+    signal x_n, a_n, b_n, y_n, d_n : RAM_N := (others => (others => '0')); 
       
   -- Internal Routing Signals
 	signal s_xin: std_logic_vector(data_WIDTH - 1 downto 0);	
 	signal s_yout : std_logic_vector (data_WIDTH - 1 downto 0);
 begin		 
     
-    -- Generate Pipelined IIR Stages
-    x_n(0) <= x_in;
-    GEN_PIPELINE: for i in 1 to N-1 generate
-        x_n(i) <= y_n(i-1);     -- Input of next stage is output of previous stage
-    end generate;    
-
+    s_xin <= x_in;
     -- Generate IIR Decimators
     GEN_IIR : for i in 0 to N - 1 generate
     IIR_FILTERS : entity IIR_DECIMATOR
-      generic map (data_WIDTH => data_WIDTH, L => L, decimation => decimation)
+      generic map (data_WIDTH => data_WIDTH, L => L)
       port map (
         clk => clk,
         reset => reset,					                
@@ -233,43 +224,41 @@ begin
         y_out => y_n(i),
         decimation_factor => d_n(i)
       );
-    end generate;
-    
+    end generate;   
+     
     -- Process to load coefficients and decimation factor for each stage
-    LOAD: process(clk)
+    process(clk)
     begin
         if rising_edge(clk) then
             if reset = '1' then
-                for i in 0 to N - 1 loop
-                    x_n(i) <= (others => '0');
-                    a_n(i) <= (others => '0');
-                    b_n(i) <= (others => '0');
-                    y_n(i) <= (others => '0');
-                    d_n(i) <= (others => '0');
-                    stage_pointer <= (others => '0');
-                end loop;           
+                    x_n <= (others => (others => '0'));
+                    a_n <= (others => (others => '0'));
+                    b_n <= (others => (others => '0'));
+                    y_n <= (others => (others => '0'));
+                    d_n <= (others => (others => '0'));                  
             else
+                -- First stage gets input directly
+                x_n(0) <= s_xin;
+
+                -- Cascade input to the next stages
+                for i in 1 to N - 1 loop
+                    x_n(i) <= y_n(i-1);     
+                end loop;           
+            
                 for i in 0 to N - 1 loop 
                     -- DEMUX input signals 
-                    if load_coeff(i) = '1' then
+                   if load_coeff(i) = '1' then
                         a_n(i) <= a_in;
                         b_n(i) <= b_in;
                         d_n(i) <= decimation_factor;
                     end if;
-                end loop;                       
+                    
+                    -- DEMUX output signals 
+                   if tap(i) = '1' and load_coeff(i) = '0' then
+                       y_out <= y_n(i);
+                   end if;  
+                end loop;         
             end if;
         end if;     
-    end process LOAD;
-  
-    TAP: process(clk)
-    begin
-        for i in 0 to N - 1 loop 
-            -- DEMUX output signals 
-            if tap(i) = '1' then
-                a_n(i) <= a_in;
-                b_n(i) <= b_in;
-                d_n(i) <= decimation_factor;
-            end if;
-        end loop;       
-    end process TAP;  
+    end process;       
 end MULTISTAGE;
