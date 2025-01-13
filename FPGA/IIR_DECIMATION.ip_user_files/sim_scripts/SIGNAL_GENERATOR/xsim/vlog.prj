@@ -1,0 +1,8 @@
+verilog xil_defaultlib --include "../../../../IIR_DECIMATION.gen/sources_1/bd/SIGNAL_GENERATOR/ipshared/3cbc" \
+"../../../bd/SIGNAL_GENERATOR/ip/SIGNAL_GENERATOR_clk_wiz_0_0/SIGNAL_GENERATOR_clk_wiz_0_0_clk_wiz.v" \
+"../../../bd/SIGNAL_GENERATOR/ip/SIGNAL_GENERATOR_clk_wiz_0_0/SIGNAL_GENERATOR_clk_wiz_0_0.v" \
+
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

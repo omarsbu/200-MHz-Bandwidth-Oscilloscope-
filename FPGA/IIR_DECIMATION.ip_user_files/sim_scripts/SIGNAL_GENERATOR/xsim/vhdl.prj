@@ -1,0 +1,6 @@
+vhdl xil_defaultlib  \
+"../../../bd/SIGNAL_GENERATOR/ip/SIGNAL_GENERATOR_dds_compiler_0_0/sim/SIGNAL_GENERATOR_dds_compiler_0_0.vhd" \
+"../../../bd/SIGNAL_GENERATOR/sim/SIGNAL_GENERATOR.vhd" \
+
+# Do not sort compile order
+nosort
