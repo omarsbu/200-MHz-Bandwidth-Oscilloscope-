@@ -26,7 +26,7 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 
-entity TWO_POLE_IIR_FILTER_CHEBYSHEV is
+entity BIQUAD_IIR_FILTER_CHEBYSHEV is
 generic (data_WIDTH : positive);
 port (
     clk : in std_logic; 
@@ -38,9 +38,9 @@ port (
     b_in : in std_logic_vector(3*data_WIDTH - 1 downto 0);  
     y_out : out std_logic_vector(data_WIDTH - 1 downto 0)   
     );
-end TWO_POLE_IIR_FILTER_CHEBYSHEV;
+end BIQUAD_IIR_FILTER_CHEBYSHEV;
 
-architecture Behavioral of TWO_POLE_IIR_FILTER_CHEBYSHEV is
+architecture Behavioral of BIQUAD_IIR_FILTER_CHEBYSHEV is
     subtype SLV_data_WIDTH is std_logic_vector(data_WIDTH - 1 downto 0);
     type RAM is array (0 to 2) of SLV_data_WIDTH;    
     signal x : RAM  := (others => (others => '0'));     -- Input signal vector x[n] registers
@@ -269,7 +269,7 @@ USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 USE WORK.ALL;
 
-entity IIR_DECIMATOR_CHEBYSHEV_TWO_POLE is
+entity BIQUAD_IIR_DECIMATOR_CHEBYSHEV is
     generic (data_WIDTH : positive);
     port(
         clk : in std_logic;	
@@ -283,9 +283,9 @@ entity IIR_DECIMATOR_CHEBYSHEV_TWO_POLE is
         y_out : out std_logic_vector(data_WIDTH - 1 downto 0);
         o_sample_clk : out std_logic  
     );
-end IIR_DECIMATOR_CHEBYSHEV_TWO_POLE;
+end BIQUAD_IIR_DECIMATOR_CHEBYSHEV;
 
-architecture STRUCTURE of IIR_DECIMATOR_CHEBYSHEV_TWO_POLE is    
+architecture STRUCTURE of BIQUAD_IIR_DECIMATOR_CHEBYSHEV is    
   -- Internal Routing Signals
 	signal IIR_xin: std_logic_vector(data_WIDTH - 1 downto 0) := (others => '0');	
 	signal IIR_yout : std_logic_vector (data_WIDTH - 1 downto 0);
@@ -299,7 +299,7 @@ begin
     sampler_din <= IIR_xin when i_decimation_factor = "000000" else IIR_yout;
     
 	-- Instantiate IIR Filter
-	u0: entity TWO_POLE_IIR_FILTER_CHEBYSHEV
+	u0: entity BIQUAD_IIR_FILTER_CHEBYSHEV
         generic map(data_WIDTH => data_WIDTH)
         port map(
             clk => clk, 
@@ -500,7 +500,7 @@ begin
                     
 	GEN_IIR: for i in 0 to 3 generate
 	-- Instantiate 4 Two Pole Chebyshev IIR Decimators	
-	IIRs: entity WORK.IIR_DECIMATOR_CHEBYSHEV_TWO_POLE 
+	IIRs: entity WORK.BIQUAD_IIR_DECIMATOR_CHEBYSHEV 
     generic map(data_WIDTH => data_WIDTH)
     port map(
         clk => clk,
