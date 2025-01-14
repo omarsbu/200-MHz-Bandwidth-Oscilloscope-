@@ -436,10 +436,12 @@ end RTL;
 --    i_sample_clk : Input sampling clock, synchronous with input data sequence
 --    i_reset : Active-high Synchronous reset
 --    i_enable: Active-high enable
---    i_decimation_factor: Decimation factor, ratio between input and output sampling rates
+--    i_decimation_select: Decimation select, Determines ratio between input and output sampling rates
+--    x_in: Input data sequence 
 --
 -- Outputs:
---    o_decimation_factor: Number of clock cycles for downsampler to count before sampling input data sequence
+--    y_out: Output data sequence
+--    o_sample_clk: Output sampling clock, synchronous with output sampling rate 
 --
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
