@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
--- Two Pole Chebyshev IIR Filter
+-- Biquad Chebyshev IIR Filter
 --
 -- Description: A 2-pole IIR Chebyshev filter. Each filter coefficient input 
 --   port, a_in and b_in, are given as inputs to the component in the form of a
@@ -242,7 +242,7 @@ begin
 end Behavioral;
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
--- Name: Two Pole Chebyshev IIR Decimator
+-- Name: Biquad Chebyshev IIR Decimator
 --
 -- Description: Cascades an 2-pole IIR Chebysev anti-aliasing filter with a  
 --  downsampler to decimate an input sample sequence. It outputs both the  
@@ -422,7 +422,7 @@ end RTL;
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
--- Multistage Two Pole Chebyshev IIR Decimator
+-- Multistage Biquad Chebyshev IIR Decimator
 --
 -- Description: A multistage decimator with 4 stages of cascaded IIR filters and
 --  and downsamplers. An internal LUTS stores 3 sets of IIR coefficients and an 
