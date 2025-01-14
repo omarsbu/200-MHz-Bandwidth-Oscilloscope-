@@ -516,14 +516,14 @@ begin
     );
     
     -- Instantiate 4 encoders to convert decimation select bits to a decimation factor
-    ENCODERs: entity WORK.DECIMATION_ENCODER
+    ENCODERs: entity DECIMATION_ENCODER
     port map(
 	   i_decimation_sel => i_decimation_select((2*i)+1 downto 2*i),
 	   o_decimation_factor => decimation_values(i)
     );
 
 	-- Instantiate 4 4:1 MUXs to select a IIR coefficients from a-LUT
-    aMUXs: entity WORK.MUX_4to1
+    aMUXs: entity MUX_4to1
     generic map (data_WIDTH => 3*data_WIDTH)
     port map(
         sel => i_decimation_select((2*i)+1 downto 2*i),
@@ -535,7 +535,7 @@ begin
     );
        
     -- Instantiate 4 4:1 MUXs to select b IIR coefficients from b-LUT 
-    bMUXs: entity WORK.MUX_4to1
+    bMUXs: entity MUX_4to1
     generic map (data_WIDTH => 3*data_WIDTH)
     port map(
         sel => i_decimation_select((2*i)+1 downto 2*i),
