@@ -68,25 +68,8 @@ begin
              S_AXIS_tvalid => S_AXIS_tvalid);   
 
 	x_in <= sine_out & x"0000"; 
-	
-	-- Unit under test
---	UUT: entity IIR_DECIMATOR_CHEBYSHEV_TWO_POLE 
---       generic map (data_WIDTH => 32)
---        port map(
---        clk => clk,
---        i_sample_clk => clk,
---        i_reset => reset,
---        i_enable => enable,
---        i_decimation_factor => decimation_factor,
---        x_in => x_in,
---        a_in => a_in,
---        b_in => b_in,
---        y_out => y_out,
---       o_sample_clk => o_sample_clk);	    	  
-	  
-	  
-	  
-	UUT: entity MULTISTAGE_IIR_DECIMATOR_CHEBYSHEV_TWO_POLE 
+		  
+	UUT: entity MULTISTAGE_BIQUAD_IIR_DECIMATOR_CHEBYSHEV  
     generic map (data_WIDTH => 32)
     port map(
         clk => clk,
