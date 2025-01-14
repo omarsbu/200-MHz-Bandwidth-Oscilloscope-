@@ -11,7 +11,6 @@
 --      i_enable: Active-high enable
 --
 -- Outputs:
---
 --      H_SYNC: Horizontal SYNC output
 --      V_SYNC: Vertical SYNC output
 --
