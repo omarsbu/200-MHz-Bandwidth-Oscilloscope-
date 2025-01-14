@@ -500,7 +500,7 @@ begin
                     
 	GEN_IIR: for i in 0 to 3 generate
 	-- Instantiate 4 Two Pole Chebyshev IIR Decimators	
-	IIRs: entity WORK.BIQUAD_IIR_DECIMATOR_CHEBYSHEV 
+	IIRs: entity BIQUAD_IIR_DECIMATOR_CHEBYSHEV 
     generic map(data_WIDTH => data_WIDTH)
     port map(
         clk => clk,
