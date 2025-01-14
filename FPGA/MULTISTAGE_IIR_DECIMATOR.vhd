@@ -448,7 +448,7 @@ USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 USE WORK.ALL;
 
-entity MULTISTAGE_IIR_DECIMATOR_CHEBYSHEV_TWO_POLE is
+entity MULTISTAGE_BIQUAD_IIR_DECIMATOR_CHEBYSHEV is
     generic (data_WIDTH : positive);
     port(
         clk : in std_logic;	
@@ -460,9 +460,9 @@ entity MULTISTAGE_IIR_DECIMATOR_CHEBYSHEV_TWO_POLE is
         y_out : out std_logic_vector(data_WIDTH - 1 downto 0);
         o_sample_clk : out std_logic
     );
-end MULTISTAGE_IIR_DECIMATOR_CHEBYSHEV_TWO_POLE;
+end MULTISTAGE_BIQUAD_IIR_DECIMATOR_CHEBYSHEV;
 
-architecture MULTISTAGE of MULTISTAGE_IIR_DECIMATOR_CHEBYSHEV_TWO_POLE is
+architecture MULTISTAGE of MULTISTAGE_BIQUAD_IIR_DECIMATOR_CHEBYSHEV is
     subtype coeff_vector is std_logic_vector(3*data_WIDTH - 1 downto 0);
     type coeff_LUT is array (0 to 2) of coeff_vector;
     
