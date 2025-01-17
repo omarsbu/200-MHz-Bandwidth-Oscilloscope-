@@ -136,9 +136,7 @@ end VOLTS_PER_DIV_ENCODER;
 
 architecture RTL of VOLTS_PER_DIV_ENCODER is 
 begin
-
-
-
+    -- In progress...
 end RTL;
 
 -----------------------------------------------------------------------------------
