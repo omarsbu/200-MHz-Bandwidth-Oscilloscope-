@@ -471,7 +471,7 @@ architecture MULTISTAGE of MULTISTAGE_BIQUAD_IIR_DECIMATOR_CHEBYSHEV is
     -- LUT of 3 sets of Q2.30 fixed point IIR a filter coefficients
     constant a_LUT : coeff_LUT := (
         x"124ABA38" & x"249574DC" & x"124ABA38",    -- Set 1: fc = 0.25*fs: 0.2858, 0.5716, 0.2858
-        x"0132301E" & x"02646047" & x"0132301E",    -- Set 2: fc = 0.05*fs: 0.01868823, 0.3737647, 0.01868823
+        x"0132301E" & x"02646047" & x"0132301E",    -- Set 2: fc = 0.05*fs: 0.01868823, 0.03737647, 0.01868823
         x"000E31B0" & x"001C6361" & x"000E31B0");   -- Set 3: fc = 0.01*fs: 0.0008663387, 0.001732678, 0.0008663387
                 
     -- LUT of 3 sets of Q2.30 fixed point IIR b filter coefficients
