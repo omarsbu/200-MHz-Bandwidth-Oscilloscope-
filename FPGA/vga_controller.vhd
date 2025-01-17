@@ -252,7 +252,7 @@ end VGA_CONTROLLER;
 
 architecture MIXED of VGA_CONTROLLER is
     constant GRID_HEIGHT : natural := 400; -- Number of vertical pixels in the waveform
-    constant GRID_WIDTH : natural  := 400; -- Number of horizontal puxels in the waveform
+    constant GRID_WIDTH : natural  := 400; -- Number of horizontal pixels in the waveform
     constant V_PER_DIV : natural   := 40;  -- Number of pixels per vertical division (10 divisions)
     constant T_PER_DIV : natural   := 40;  -- Number of pixels per horizontal division (10 divisions)
     
