@@ -103,72 +103,7 @@ begin
     o_column <= std_logic_vector(h_counter) when i_enable = '1' else (others => '0');
     o_row <= std_logic_vector(v_counter) when i_enable = '1' else (others => '0');
 end Behavioral;
-            
-----------------------------------------------------------------------------------
-----------------------------------------------------------------------------------
--- Name: SIPO Buffer 
---
--- Description: A serial-in-parallel-out buffer to facilitate crossing from the 
---  sampling clock domain to the VGA pixel clock domain. Data is loaded into the 
---  display buffer at the sampling clock rate and it is loaded out of the 
---  display buffer at the pixel clock rate. The ratio between these two clock 
---  rates will determine the size of the buffer. Data is shifted in at the 
---  sampling clock rate and parallel loaded out at the pixel clock rate. 
---
--- Inputs:
---      clk: Input data clock
---      i_reset: Active-high synchronous reset
---      data_in: Serial input data stream
--- 
--- Outputs:
---      data_out: Parallel output data stream
---
-----------------------------------------------------------------------------------
-----------------------------------------------------------------------------------
-LIBRARY IEEE;
-USE IEEE.STD_LOGIC_1164.ALL;
-USE IEEE.NUMERIC_STD.ALL;
-
-entity SIPO_BUFFER is
-    generic (data_WIDTH : positive; LEN : positive);
-    port(
-        clk : in std_logic;
-        i_reset : in std_logic;
-        data_in : in std_logic_vector(data_WIDTH - 1 downto 0);
-        data_out : out std_logic_vector(LEN*data_WIDTH - 1 downto 0)
-    );
-end SIPO_BUFFER;
-
-architecture RTL of SIPO_BUFFER is 
-   subtype SLV_data_WIDTH is std_logic_vector(data_WIDTH - 1 downto 0);
-   type RAM is array (0 to LEN - 1) of SLV_data_WIDTH;    
-   signal buffer_RAM : RAM;
-   signal RAM_ptr : integer range 0 to LEN - 1;
-begin
-    process(clk)
-    begin
-        if rising_edge(clk) then
-            if i_reset = '1' then
-                buffer_RAM <= (others => (others => '0'));
-                RAM_ptr <= 0;
-            else
-                buffer_RAM(RAM_ptr) <= data_in;   -- Load input data into RAM address
-                
-                if(RAM_ptr = LEN - 1) then
-                    RAM_ptr <= 0;   -- Pointer rolls over to 0
-                else
-                    RAM_ptr <= RAM_ptr + 1;     -- Increment pointer
-                end if;
-            end if;    
-        end if;
-    end process;
-    
-    -- Parallel output values are read directly from internal RAM
-    OUTPUT:for i in 0 to LEN - 1 generate    
-        data_out((i+1)*data_WIDTH - 1 downto i*data_WIDTH) <= buffer_RAM(i);
-    end generate;
-end RTL;
-                
+                        
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
 -- Name: Volts per division encoder
@@ -272,7 +207,6 @@ begin
     -- Asynchronously read data from the buffer RAM
     data_out <= buffer_RAM(to_integer(unsigned(i_address)));    
 end RTL;
-
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
