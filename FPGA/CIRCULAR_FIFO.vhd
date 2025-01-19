@@ -163,7 +163,7 @@ begin
                 read_enable <= '0';     -- Disable read address counter  
                 if rising_edge(i_write_clk) then
                     write_ptr_reg <= write_ptr;
-                    FIFO_RAM(to_integer(unsigned(write_ptr_reg))) <= i_write_data;                
+                    FIFO_RAM(to_integer(unsigned(write_ptr))) <= i_write_data;                
                 end if;            
             when READ =>
             -- Enable read address counter and read wavefom samples out of FIFO_RAM
