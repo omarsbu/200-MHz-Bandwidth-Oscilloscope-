@@ -50,12 +50,10 @@ end behavioral;
 -- Name: Circular FIFO
 --
 -- Description: Circular FIFO buffer to continuously read samples from the JESD204B
---  reciever. Following a trigger event, the buffer can be disabled to capture
---  a waveform. To allow for continuous data aquisition, two circular buffers are
---  used. One buffer continuously reads samples from the receiver while the other 
---  buffer is disabled and stores a waveform that is currently being processed. 
---  Once the waveform has finished been processed and displayed, the two buffers  
---  swap roles.
+--  reciever. Following a trigger event, the buffer captures a set of samples that
+--  correspond to a waveform with the trigger point in the center. The FIFO has 
+--  separate READ and WRITE buses to allow clock-domain crossing from the fast 
+--  sampling clock domain to the slower VGA pixel clock domain. 
 --
 -- Inputs:
 --      clk: System clock
