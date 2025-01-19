@@ -24,7 +24,7 @@ architecture Behavioral of TESTBENCH is
 begin
 
     -- Instantiate CIRCULAR_FIFO
-    U_FIFO: entity work.CIRCULAR_FIFO
+    U_FIFO: entity work.CAPTURE_FIFO
         generic map(data_WIDTH => DATA_WIDTH, LEN => LEN)
         port map(
             clk => clk,
