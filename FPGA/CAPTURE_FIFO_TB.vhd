@@ -1,11 +1,12 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+USE WORK.ALL;
 
-entity TESTBENCH is
-end TESTBENCH;
+entity CAPTURE_FIFO_TB is
+end CAPTURE_FIFO_TB;
 
-architecture Behavioral of TESTBENCH is
+architecture TB of CAPTURE_FIFO_TB is
     -- Generic parameters for the DUT
     constant WIDTH : positive := 4; -- Address counter width
     constant DATA_WIDTH : positive := 8; -- Data width for FIFO
@@ -89,4 +90,4 @@ begin
     
         wait;
     end process;
-end Behavioral;
+end TB;
