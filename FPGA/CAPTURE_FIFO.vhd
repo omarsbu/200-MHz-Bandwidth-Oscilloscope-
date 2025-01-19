@@ -47,9 +47,9 @@ end behavioral;
 
 -----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
--- Name: Circular FIFO
+-- Name: Capture FIFO
 --
--- Description: Circular FIFO buffer to continuously read samples from the JESD204B
+-- Description: Capture FIFO buffer to continuously read samples from the JESD204B
 --  reciever. Following a trigger event, the buffer captures a set of samples that
 --  correspond to a waveform with the trigger point in the center. The FIFO has 
 --  separate READ and WRITE buses to allow clock-domain crossing from the fast 
@@ -75,7 +75,7 @@ USE IEEE.NUMERIC_STD.ALL;
 use IEEE.MATH_REAL.ALL;
 USE WORK.ALL;
 
-entity CIRCULAR_FIFO is
+entity CAPTURE_FIFO is
     generic (data_WIDTH : positive; LEN : positive);
     port(
         clk : in std_logic;
@@ -86,9 +86,9 @@ entity CIRCULAR_FIFO is
         i_read_clk : in std_logic;
         o_read_data : out std_logic_vector(data_WIDTH - 1 downto 0)
     );
-end CIRCULAR_FIFO;
+end CAPTURE_FIFO;
 
-architecture FSM of CIRCULAR_FIFO is
+architecture FSM of CAPTURE_FIFO is
     -- Compute the number of address bits required for LEN addresses
     constant ADDR_WIDTH : integer := integer(ceil(log2(real(LEN))));
     
