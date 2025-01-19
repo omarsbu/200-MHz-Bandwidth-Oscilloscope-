@@ -175,7 +175,7 @@ begin
                 if rising_edge(i_read_clk) then
                     -- Read pointer is an offset from the start address of a waveform 
                     read_ptr_reg <= read_ptr;
-                    o_read_data <= FIFO_RAM(to_integer(unsigned(read_ptr - 1)));                
+                    o_read_data <= FIFO_RAM(to_integer(unsigned(read_ptr)));                
                 end if;    
         end case;   
     end process;  
