@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
--- CIC Integrator
+-- Name: CIC Integrator
 --
 -- Description: Output accumulates input data through summation with previous 
 --  input data. Uses signed 2's compliment "roll-over" arithmetic logic
@@ -52,7 +52,7 @@ end RTL;
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
--- CIC Comb
+-- Name: CIC Comb
 --
 -- Description: Output combs the input through subtraction. The input is an 
 --  accumulated summation from the integrator and the subtraction operation is
