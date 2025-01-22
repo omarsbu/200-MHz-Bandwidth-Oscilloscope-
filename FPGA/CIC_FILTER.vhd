@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
--- Name: CIC Integrator
+-- CIC Integrator
 --
 -- Description: Output accumulates input data through summation with previous 
 --  input data. Uses signed 2's compliment "roll-over" arithmetic logic
@@ -19,6 +19,7 @@
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+USE IEEE.NUMERIC_STD.ALL;
 
 entity CIC_INTEGRATOR is
 	generic (data_WIDTH : positive);	
@@ -26,13 +27,13 @@ entity CIC_INTEGRATOR is
 		clk : in std_logic;
 		i_reset : in std_logic; 
 		i_enable : in std_logic;
-		i_data : in std_logic_vector(data_WIDTH - 1 downto 0);
-		o_data : out std_logic_vector(data_WIDTH - 1 downto 0)
+		i_data : in signed(data_WIDTH - 1 downto 0);
+		o_data : out signed(data_WIDTH - 1 downto 0)
 	);
 end CIC_INTEGRATOR;
 
 architecture RTL of CIC_INTEGRATOR is
-	signal in_reg, out_reg : std_logic_vector(data_WIDTH - 1 downto 0);
+	signal in_reg, out_reg : signed(data_WIDTH - 1 downto 0);
 begin
 	process(clk)
 	begin
@@ -52,7 +53,7 @@ end RTL;
 
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
--- Name: CIC Comb
+-- CIC Comb
 --
 -- Description: Output combs the input through subtraction. The input is an 
 --  accumulated summation from the integrator and the subtraction operation is
@@ -73,7 +74,7 @@ end RTL;
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.STD_LOGIC_UNSIGNED.ALL;
-
+USE IEEE.NUMERIC_STD.ALL;
 
 entity CIC_COMB is
 	generic (data_WIDTH : positive; R : positive);	
@@ -81,14 +82,14 @@ entity CIC_COMB is
 		clk : in std_logic;
 		i_reset : in std_logic; 
 		i_enable : in std_logic;
-		i_data : in std_logic_vector(data_WIDTH - 1 downto 0);
-		o_data : out std_logic_vector(data_WIDTH - 1 downto 0)
+		i_data : in signed(data_WIDTH - 1 downto 0);
+		o_data : out signed(data_WIDTH - 1 downto 0)
 	);
 end CIC_COMB;
 
 architecture RTL of CIC_COMB is
-    signal delay_counter : integer range 0 to R;
-	signal in_reg, delay_reg : std_logic_vector(data_WIDTH - 1 downto 0);
+    signal delay_counter : integer range 0 to R-1;
+	signal in_reg, delay_reg : signed(data_WIDTH - 1 downto 0);
 begin
 	process(clk)
 	begin
