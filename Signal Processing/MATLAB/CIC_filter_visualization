@@ -1,0 +1,86 @@
+function main
+    % Main program entry point
+    disp('Starting CIC filter visualization...');
+    cic_filter_with_sliders();
+end
+
+function cic_filter_with_sliders
+    % Initial parameters
+    fs = 1000; % Sampling frequency in Hz
+    R = 64; % Initial Length of the moving average filter
+    N = 3; % Initial Stages
+    impulse = [1, zeros(1, 1023)]; % Impulse signal (length 1024)
+    
+    % Frequency axis for FFT (from -0.5*fs to +0.5*fs)
+    f_fft = linspace(-0.5*fs, 0.5*fs, 1024);  % Exact range from -0.5*fs to +0.5*fs
+    
+    % Create figure
+    fig = figure('Name', 'CIC Filter Visualization', 'NumberTitle', 'off', 'Position', [100, 100, 1200, 600]);
+    
+    % Add a panel for sliders in the top-right corner
+    sliderPanel = uipanel('Parent', fig, 'Title', 'Parameters', 'Position', [0.75, 0.65, 0.2, 0.3]);
+    
+    % Slider for R
+    uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 100, 100, 20], ...
+        'String', 'R (Length)', 'HorizontalAlignment', 'left');
+    slider_R = uicontrol('Parent', sliderPanel, 'Style', 'slider', 'Min', 2, 'Max', 128, 'Value', R, ...
+        'SliderStep', [1/(128-2), 10/(128-2)], ... % Fine step: 1 unit, Large step: 10 units
+        'Position', [10, 80, 180, 20], 'Callback', @updatePlot);
+    
+    % Display the current value of R
+    value_R = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 60, 180, 20], ...
+        'String', sprintf('R = %d', R), 'HorizontalAlignment', 'center');
+    
+    % Slider for N
+    uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 40, 100, 20], ...
+        'String', 'N (Stages)', 'HorizontalAlignment', 'left');
+    slider_N = uicontrol('Parent', sliderPanel, 'Style', 'slider', 'Min', 1, 'Max', 10, 'Value', N, ...
+        'SliderStep', [1/(10-1), 2/(10-1)], ... % Fine step: 1 unit, Large step: 2 units
+        'Position', [10, 20, 180, 20], 'Callback', @updatePlot);
+    
+    % Display the current value of N
+    value_N = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 0, 180, 20], ...
+        'String', sprintf('N = %d', N), 'HorizontalAlignment', 'center');
+    
+    % Initial plot
+    updatePlot();
+    
+    function updatePlot(~, ~)
+        % Get slider values
+        R = round(get(slider_R, 'Value'));
+        N = round(get(slider_N, 'Value'));
+        
+        % Update text displays for R and N
+        set(value_R, 'String', sprintf('R = %d', R));
+        set(value_N, 'String', sprintf('N = %d', N));
+        
+        % CIC filter coefficients
+        cic = ones(1, R); % Moving average filter coefficients
+        
+        % Pass impulse through moving average filter N times
+        output_cic = filter(cic, 1, impulse); % Output of moving average filter
+        for i = 1:N-1
+            output_cic = filter(cic, 1, output_cic); 
+        end
+        
+        % FFT of CIC filter impulse response 
+        fft_cic = fft(output_cic, 1024); % FFT of moving average filter output
+        fft_cic = fftshift(fft_cic); % Shift FFT to center the zero frequency
+        
+        % Clear figure and plot results
+        subplot(2, 1, 1, 'Parent', fig, 'Position', [0.1, 0.55, 0.6, 0.4]); % Top-left plot
+        plot(f_fft / fs, abs(fft_cic)); % Normalize frequency axis to fs
+        title('CIC Filter Magnitude (Frequency Domain)');
+        xlabel('Frequency (Hz)');
+        ylabel('Magnitude');
+        grid on;
+        
+        % Phase frequency-domain plot for CIC filter (normalized to fs)
+        subplot(2, 1, 2, 'Parent', fig, 'Position', [0.1, 0.1, 0.6, 0.35]); % Bottom-left plot
+        plot(f_fft / fs, unwrap(angle(fft_cic))); % Unwrap phase and normalize
+        title('CIC Filter Phase (Frequency Domain)');
+        xlabel('Normalized Frequency (f/fs)');
+        ylabel('Phase (radians)');
+        grid on;
+    end
+end
