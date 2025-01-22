@@ -88,20 +88,20 @@ end CIC_COMB;
 
 architecture RTL of CIC_COMB is
     signal delay_counter : integer range 0 to R;
-	signal in_reg, out_reg : std_logic_vector(data_WIDTH - 1 downto 0);
+	signal in_reg, delay_reg : std_logic_vector(data_WIDTH - 1 downto 0);
 begin
 	process(clk)
 	begin
 		if rising_edge(clk) then
 		  if i_reset = '1' then
 		      delay_counter <= 0;
+		      delay_reg <= (others => '0');
 		      in_reg <= (others => '0');
-		      out_reg <= (others => '0');
 		  elsif i_enable = '1' then
-              if delay_counter = R then 
+              if delay_counter = R-1 then    		  
                   delay_counter <= 0;
-    		      in_reg <= i_data;
-	   	          out_reg <= in_reg - out_reg;
+                  in_reg <= i_data;
+                  delay_reg <= in_reg;
 	   	      else
 	   	          delay_counter <= delay_counter + 1;
               end if;
@@ -109,5 +109,5 @@ begin
 	   end if;
 	end process;
 				
-	o_data <= out_reg;
+	o_data <= in_reg - delay_reg;
 end RTL;
