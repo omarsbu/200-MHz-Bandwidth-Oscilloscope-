@@ -55,8 +55,9 @@ function cic_filter_with_sliders
         set(value_N, 'String', sprintf('N = %d', N));
         
         % fir2.m parameters
+        fc = fs/(2*R*N); %% Pass band edge in Hz
         L = 110; %% Filter order; must be even
-        Fo = R*fc/fs; %% Normalized Cutoff freq; 0<Fo<=0.5/M;
+        Fo = fc/fs; %% Normalized Cutoff freq; 0<Fo<=0.5/M;
         p = 2e3; %% Granularity
         s = 0.25/p; %% Step size
         fpass = [0:s:Fo]; %% Pass band frequency samples
