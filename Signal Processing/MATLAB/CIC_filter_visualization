@@ -10,7 +10,7 @@ function cic_filter_with_sliders
     R = 64; % Initial Length of the moving average filter
     N = 1; % Initial Stages
     M = 1;
-    fc = fs/(4*R*N); %% Pass band edge in Hz
+    fc = fs/(4*R); %% Pass band edge in Hz
     impulse = [1, zeros(1, 1023)]; % Impulse signal (length 1024)
         
     % Frequency axis for FFT (normalized to fs)
@@ -57,6 +57,7 @@ function cic_filter_with_sliders
         % fir2.m parameters
         fc = fs/(2*R*N); %% Pass band edge in Hz
         L = 110; %% Filter order; must be even
+        fc = fs/(4*R); %% Pass band edge in Hz
         Fo = fc/fs; %% Normalized Cutoff freq; 0<Fo<=0.5/M;
         p = 2e3; %% Granularity
         s = 0.25/p; %% Step size
