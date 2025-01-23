@@ -39,6 +39,7 @@ function cic_filter_with_sliders
     value_N = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 160, 140, 20], ...
         'String', sprintf('N = %d', N), 'HorizontalAlignment', 'center');
 
+
     % Slider for L
     uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 120, 100, 20], ...
         'String', 'L (FIR Filter Order)', 'HorizontalAlignment', 'left');
@@ -101,7 +102,7 @@ function cic_filter_with_sliders
         plot(f_fft, abs(fft_cic), 'b', 'LineWidth', 1.5, 'DisplayName', 'CIC FFT');
         hold on;
         plot(f_fft, abs(H), 'r', 'LineWidth', 1.5, 'DisplayName', 'FIR FFT');
-        xline(1 / R, 'k--', 'LineWidth', 1.5, 'DisplayName', 'New Sampling Rate');
+        xline(1 / R, 'ko', 'LineWidth', 1.5, 'DisplayName', 'New Sampling Rate');
         xline(0.5 / R, 'k--', 'LineWidth', 1.5, 'DisplayName', 'New Nyquist Rate');
         hold off;
         legend('show');
@@ -120,5 +121,13 @@ function cic_filter_with_sliders
         xlabel('Normalized Frequency (f/fs)');
         ylabel('Phase (radians)');
         grid on;
+
+      % Display for additional calculated values
+        newSampleRate = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 440, 140, 20], ...
+            'String', sprintf('New sample rate: %.3f*fs', 1 / R), 'HorizontalAlignment', 'left');
+        newNyquistRate = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 420, 140, 20], ...
+            'String', sprintf('New Nyquist rate: %.3f*fs', 1 / (2 * R)), 'HorizontalAlignment', 'left');
+        firCutoff = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 400, 140, 20], ...
+            'String', sprintf('FIR Cutoff: %.3f*fs', fc/fs), 'HorizontalAlignment', 'left');
     end
 end
