@@ -154,10 +154,11 @@ entity CIC_FILTER is
 end CIC_FILTER;
 
 architecture STRUCTURAL of CIC_FILTER is
-    -- Compute the register widths of the CIC filter 
-    constant REG_WIDTH : integer := integer (data_WIDTH) + integer(ceil(log2(real(N*R))));
-    
-    type pipeline is array (0 to N-1) of signed(REG_WIDTH - 1 downto 0);
+    -- Compute the register widths and division factor of the CIC filter 
+    constant REG_WIDTH : integer := integer (data_WIDTH) + integer(N)*integer(ceil(log2(real(R))));
+    constant SHIFT_VAL : integer := integer(N)*integer(ceil(log2(real(R))));
+
+    type pipeline is array (0 to N) of signed(REG_WIDTH - 1 downto 0);
     signal integrator_pipeline : pipeline; 
     signal comb_pipleine : pipeline;
 begin
@@ -165,32 +166,32 @@ begin
     begin
         if rising_edge(clk) then
             integrator_pipeline(0) <= resize(i_data, REG_WIDTH);        
-            comb_pipleine(0) <= integrator_pipeline(N-1);        
-            o_data <= resize(shift_right(signed(comb_pipleine(N-1)),R), data_WIDTH);
+            comb_pipleine(0) <= integrator_pipeline(N);        
+            o_data <= resize(shift_right(signed(comb_pipleine(N)), SHIFT_VAL), data_WIDTH);
         end if;
     end process;
     
-    INTEGRATOR_STAGE: for i in 1 to N-1 generate
+    INTEGRATOR_STAGE: for i in 0 to N-1 generate
         INTEGRATOR: entity CIC_INTEGRATOR
-        generic map(data_WIDTH => data_WIDTH)	
+        generic map(data_WIDTH => REG_WIDTH)	
         port map(
  		  clk => clk,
 		  i_reset => i_reset, 
           i_enable => i_enable,
-		  i_data => integrator_pipeline(i-1),
-		  o_data => integrator_pipeline(i)
+		  i_data => integrator_pipeline(i),
+		  o_data => integrator_pipeline(i+1)
         );
     end generate;
    
-    COMB_STAGE: for i in 1 to N-1 generate
-        COMB:entity CIC_COMB
-        generic map(data_WIDTH => data_WIDTH, R => R)	
+    COMB_STAGE: for i in 0 to N-1 generate
+        COMB: entity CIC_COMB
+        generic map(data_WIDTH => REG_WIDTH, R => R)	
         port map(
  		  clk => clk,
 		  i_reset => i_reset, 
           i_enable => i_enable,
-		  i_data => comb_pipleine(i-1),
-		  o_data => comb_pipleine(i)      
+		  i_data => comb_pipleine(i),
+		  o_data => comb_pipleine(i+1)      
         );
     end generate;
 end STRUCTURAL;
