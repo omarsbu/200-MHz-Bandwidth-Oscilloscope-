@@ -71,18 +71,17 @@ function cic_filter_with_sliders
         fstop = (Fo + s):s:0.5;
         f = [fpass fstop] * 2;
         Mp = ones(1, length(fpass));
-        Mp(2:end) = abs(M * R * sin(pi * fpass(2:end) / R) ./ sin(pi * M * fpass(2:end))).^N;
+        Mp(2:end) = abs(M * R * sin(pi * fpass(2:end) / R) ./ sin(pi * M * fpass(2:end))).^(4*N);
         Mf = [Mp zeros(1, length(fstop))];
         f(end) = 1;
 
         % Design FIR compensator
         h = fir2(L, f, Mf);
-        h = h / max(h);
-
+        output_fir = filter(h, 1, impulse);
+        
         % Frequency response
-        H = fft(h, 1024);
+        H = fft(output_fir, 1024);
         H = fftshift(H);
-        H = H / H(512);
 
         % CIC filter coefficients
         cic = ones(1, R) / R;
@@ -96,12 +95,16 @@ function cic_filter_with_sliders
         % FFT of CIC filter
         fft_cic = fft(output_cic, 1024);
         fft_cic = fftshift(fft_cic);
+        
+        total = fft_cic.*H;
 
         % Clear figure and plot results
         subplot(2, 1, 1, 'Parent', fig, 'Position', [0.1, 0.55, 0.7, 0.4]);
-        plot(f_fft, abs(fft_cic), 'b', 'LineWidth', 1.5, 'DisplayName', 'CIC FFT');
+        plot(f_fft, abs(fft_cic), 'b', 'LineWidth', 1.5, 'DisplayName', 'CIC Filter');
         hold on;
-        plot(f_fft, abs(H), 'r', 'LineWidth', 1.5, 'DisplayName', 'FIR FFT');
+        plot(f_fft, abs(H), 'r', 'LineWidth', 1.5, 'DisplayName', 'FIR Compensation Filter');
+        hold on;
+        plot(f_fft, abs(total), 'g', 'LineWidth', 1.5, 'DisplayName', 'Total Filter');
         xline(1 / R, 'ko', 'LineWidth', 1.5, 'DisplayName', 'New Sampling Rate');
         xline(0.5 / R, 'k--', 'LineWidth', 1.5, 'DisplayName', 'New Nyquist Rate');
         hold off;
