@@ -7,110 +7,116 @@ end
 function cic_filter_with_sliders
     % Initial parameters
     fs = 1000; % Sampling frequency in Hz
-    R = 64; % Initial Length of the moving average filter
+    R = 4; % Initial Length of the moving average filter
     N = 1; % Initial Stages
     M = 1;
-    fc = fs/(4*R); %% Pass band edge in Hz
+    L = 110; % Initial FIR filter order
+    fc = fs / (4 * R); % Pass band edge in Hz
     impulse = [1, zeros(1, 1023)]; % Impulse signal (length 1024)
-        
+
     % Frequency axis for FFT (normalized to fs)
-    f_fft = (-0.512*fs:0.511*fs) * (1 / 1024); % Frequency axis normalized to fs
-    
+    f_fft = linspace(-0.5, 0.5, 1024);
+
     % Create figure
     fig = figure('Name', 'CIC Filter Visualization', 'NumberTitle', 'off', 'Position', [100, 100, 1200, 600]);
-    
-    % Add a panel for sliders in the top-right corner
-    sliderPanel = uipanel('Parent', fig, 'Title', 'Parameters', 'Position', [0.75, 0.65, 0.2, 0.3]);
-    
+
+    % Add a panel for sliders on the far right
+    sliderPanel = uipanel('Parent', fig, 'Title', 'Parameters', 'Position', [0.82, 0.1, 0.16, 0.8]);
+
     % Slider for R
-    uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 100, 100, 20], ...
+    uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 280, 100, 20], ...
         'String', 'R (Length)', 'HorizontalAlignment', 'left');
     slider_R = uicontrol('Parent', sliderPanel, 'Style', 'slider', 'Min', 2, 'Max', 128, 'Value', R, ...
-        'Position', [10, 80, 180, 20], 'Callback', @updatePlot);
-    
-    % Display the current value of R
-    value_R = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 60, 180, 20], ...
+        'Position', [10, 260, 140, 20], 'Callback', @updatePlot);
+    value_R = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 240, 140, 20], ...
         'String', sprintf('R = %d', R), 'HorizontalAlignment', 'center');
-    
+
     % Slider for N
-    uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 40, 100, 20], ...
+    uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 200, 100, 20], ...
         'String', 'N (Stages)', 'HorizontalAlignment', 'left');
     slider_N = uicontrol('Parent', sliderPanel, 'Style', 'slider', 'Min', 1, 'Max', 10, 'Value', N, ...
-        'Position', [10, 20, 180, 20], 'Callback', @updatePlot);
-    
-    % Display the current value of N
-    value_N = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 0, 180, 20], ...
+        'Position', [10, 180, 140, 20], 'Callback', @updatePlot);
+    value_N = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 160, 140, 20], ...
         'String', sprintf('N = %d', N), 'HorizontalAlignment', 'center');
-    
+
+    % Slider for L
+    uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 120, 100, 20], ...
+        'String', 'L (FIR Filter Order)', 'HorizontalAlignment', 'left');
+    slider_L = uicontrol('Parent', sliderPanel, 'Style', 'slider', 'Min', 10, 'Max', 200, 'Value', L, ...
+        'Position', [10, 100, 140, 20], 'Callback', @updatePlot);
+    value_L = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 80, 140, 20], ...
+        'String', sprintf('L = %d', L), 'HorizontalAlignment', 'center');
+
     % Initial plot
     updatePlot();
-    
+
     function updatePlot(~, ~)
         % Get slider values
         R = round(get(slider_R, 'Value'));
         N = round(get(slider_N, 'Value'));
-        
-        % Update text displays for R and N
+        L = round(get(slider_L, 'Value'));
+
+        % Update text displays
         set(value_R, 'String', sprintf('R = %d', R));
         set(value_N, 'String', sprintf('N = %d', N));
-        
-        % fir2.m parameters
-        fc = fs/(2*R*N); %% Pass band edge in Hz
-        L = 110; %% Filter order; must be even
-        fc = fs/(4*R); %% Pass band edge in Hz
-        Fo = fc/fs; %% Normalized Cutoff freq; 0<Fo<=0.5/M;
-        p = 2e3; %% Granularity
-        s = 0.25/p; %% Step size
-        fpass = [0:s:Fo]; %% Pass band frequency samples
-        fstop = (Fo+s):s:0.5; %% Stop band frequency samples
-        f = [fpass fstop]*2; %% Normalized frequency samples; 0<=f<=1
-        Mp = ones(1,length(fpass)); %% Pass band response; Mp(1)=1
-        Mp(2:end) = abs( M*R*sin(pi*fpass(2:end)/R)./sin(pi*M*fpass(2:end))).^N;
-        Mf = [Mp zeros(1,length(fstop))];
+        set(value_L, 'String', sprintf('L = %d', L));
+
+        % FIR2 parameters
+        fc = fs / (4 * R);
+        Fo = fc / fs;
+        p = 2e3;
+        s = 0.25 / p;
+        fpass = 0:s:Fo;
+        fstop = (Fo + s):s:0.5;
+        f = [fpass fstop] * 2;
+        Mp = ones(1, length(fpass));
+        Mp(2:end) = abs(M * R * sin(pi * fpass(2:end) / R) ./ sin(pi * M * fpass(2:end))).^N;
+        Mf = [Mp zeros(1, length(fstop))];
         f(end) = 1;
 
-        % Design FIR compensator using fir2
-        h = fir2(L,f,Mf); %% Filter length L+1
-        h = h/max(h); %% Normalize floating point coefficients
-        
-        % Frequency response (FFT) of the filter
-        H = fft(h, 1024); %% Compute FFT of the filter impulse response
-        H = fftshift(H); % Shift FFT to center the zero frequency
-        H = H/max(H);
-        
+        % Design FIR compensator
+        h = fir2(L, f, Mf);
+        h = h / max(h);
+
+        % Frequency response
+        H = fft(h, 1024);
+        H = fftshift(H);
+        H = H / H(512);
+
         % CIC filter coefficients
-        cic = ones(1, R)/R; % Moving average filter coefficients
-        
-        % Pass impulse through moving average filter N times
-        output_cic = filter(cic, 1, impulse); % Output of moving average filter
-        for i = 1:N-1
-            output_cic = filter(cic, 1, output_cic); 
+        cic = ones(1, R) / R;
+
+        % Output of moving average filter N times
+        output_cic = filter(cic, 1, impulse);
+        for i = 1:N - 1
+            output_cic = filter(cic, 1, output_cic);
         end
-        
-        % FFT of CIC filter impulse response 
-        fft_cic = fft(output_cic, 1024); % FFT of moving average filter output
-        fft_cic = fftshift(fft_cic); % Shift FFT to center the zero frequency
-        
+
+        % FFT of CIC filter
+        fft_cic = fft(output_cic, 1024);
+        fft_cic = fftshift(fft_cic);
+
         % Clear figure and plot results
-        subplot(2, 1, 1, 'Parent', fig, 'Position', [0.1, 0.55, 0.8, 0.4]); % Top plot
+        subplot(2, 1, 1, 'Parent', fig, 'Position', [0.1, 0.55, 0.7, 0.4]);
+        plot(f_fft, abs(fft_cic), 'b', 'LineWidth', 1.5, 'DisplayName', 'CIC FFT');
         hold on;
-        plot(f_fft / fs, abs(fft_cic), 'b', 'DisplayName', 'CIC FFT'); % CIC in blue
-        plot(f_fft / fs, abs(H), 'r', 'DisplayName', 'FIR FFT'); % FIR in red
+        plot(f_fft, abs(H), 'r', 'LineWidth', 1.5, 'DisplayName', 'FIR FFT');
+        xline(1 / R, 'k--', 'LineWidth', 1.5, 'DisplayName', 'New Sampling Rate');
+        xline(0.5 / R, 'k--', 'LineWidth', 1.5, 'DisplayName', 'New Nyquist Rate');
         hold off;
         legend('show');
-        title(sprintf('Magnitude Response\nR = %d, N = %d', R, N));
+        title('Magnitude Response');
         xlabel('Normalized Frequency (f/fs)');
         ylabel('Magnitude');
         grid on;
-        
-        % Phase frequency-domain plot for CIC filter (normalized to fs)
-        subplot(2, 1, 2, 'Parent', fig, 'Position', [0.1, 0.1, 0.8, 0.35]); % Bottom plot
-        plot(f_fft / fs, unwrap(angle(fft_cic)), 'b', 'DisplayName', 'CIC Phase'); % CIC phase
+
+        subplot(2, 1, 2, 'Parent', fig, 'Position', [0.1, 0.1, 0.7, 0.35]);
+        plot(f_fft, unwrap(angle(fft_cic)), 'b', 'LineWidth', 1.5, 'DisplayName', 'CIC Phase');
         hold on;
-        plot(f_fft / fs, unwrap(angle(H)), 'r', 'DisplayName', 'FIR Phase'); % FIR phase
+        plot(f_fft, unwrap(angle(H)), 'r', 'LineWidth', 1.5, 'DisplayName', 'FIR Phase');
         hold off;
         legend('show');
-        title(sprintf('Phase Response\nR = %d, N = %d', R, N));
+        title('Phase Response');
         xlabel('Normalized Frequency (f/fs)');
         ylabel('Phase (radians)');
         grid on;
