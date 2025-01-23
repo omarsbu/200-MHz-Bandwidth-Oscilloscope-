@@ -25,7 +25,7 @@ function cic_filter_with_sliders
 
     % Slider for R
     uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 280, 100, 20], ...
-        'String', 'R (Length)', 'HorizontalAlignment', 'left');
+        'String', 'R (Rate Change)', 'HorizontalAlignment', 'left');
     slider_R = uicontrol('Parent', sliderPanel, 'Style', 'slider', 'Min', 2, 'Max', 128, 'Value', R, ...
         'Position', [10, 260, 140, 20], 'Callback', @updatePlot);
     value_R = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 240, 140, 20], ...
@@ -33,12 +33,11 @@ function cic_filter_with_sliders
 
     % Slider for N
     uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 200, 100, 20], ...
-        'String', 'N (Stages)', 'HorizontalAlignment', 'left');
+        'String', 'N (CIC Stages)', 'HorizontalAlignment', 'left');
     slider_N = uicontrol('Parent', sliderPanel, 'Style', 'slider', 'Min', 1, 'Max', 10, 'Value', N, ...
         'Position', [10, 180, 140, 20], 'Callback', @updatePlot);
     value_N = uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 160, 140, 20], ...
         'String', sprintf('N = %d', N), 'HorizontalAlignment', 'center');
-
 
     % Slider for L
     uicontrol('Parent', sliderPanel, 'Style', 'text', 'Position', [10, 120, 100, 20], ...
@@ -71,7 +70,7 @@ function cic_filter_with_sliders
         fstop = (Fo + s):s:0.5;
         f = [fpass fstop] * 2;
         Mp = ones(1, length(fpass));
-        Mp(2:end) = abs(M * R * sin(pi * fpass(2:end) / R) ./ sin(pi * M * fpass(2:end))).^(4*N);
+        Mp(2:end) = (abs(M * R * sin(pi * fpass(2:end) / R) ./ sin(pi * M * fpass(2:end))).^(N));
         Mf = [Mp zeros(1, length(fstop))];
         f(end) = 1;
 
@@ -96,22 +95,37 @@ function cic_filter_with_sliders
         fft_cic = fft(output_cic, 1024);
         fft_cic = fftshift(fft_cic);
         
-        total = fft_cic.*H;
+        % Total filter Response
+        total = filter(cic, 1, impulse);
+        total = filter(h, 1, total);
+        total_fft = fft(total, 1024);
+        total_fft = fftshift(total_fft);
+
+        % Convert magnitude response to dB
+        magnitude_fft_cic_dB = 20 * log10(abs(fft_cic));
+        magnitude_H_dB = 20 * log10(abs(H));
+        magnitude_total_dB = 20*log10(abs(total_fft));
+
+        % Prevent -Inf for zero values by setting a minimum value
+        lim_dB = -150;
+        magnitude_fft_cic_dB(magnitude_fft_cic_dB < lim_dB) = lim_dB;
+        magnitude_H_dB(magnitude_H_dB < lim_dB) = lim_dB;
+        magnitude_total_dB(magnitude_total_dB < lim_dB) = lim_dB;
 
         % Clear figure and plot results
         subplot(2, 1, 1, 'Parent', fig, 'Position', [0.1, 0.55, 0.7, 0.4]);
-        plot(f_fft, abs(fft_cic), 'b', 'LineWidth', 1.5, 'DisplayName', 'CIC Filter');
+        plot(f_fft, (magnitude_fft_cic_dB), 'b', 'LineWidth', 1.5, 'DisplayName', 'CIC Averaging Filter');
         hold on;
-        plot(f_fft, abs(H), 'r', 'LineWidth', 1.5, 'DisplayName', 'FIR Compensation Filter');
+        plot(f_fft, (magnitude_H_dB), 'r', 'LineWidth', 1.5, 'DisplayName', 'FIR Compensation Filter');
         hold on;
-        plot(f_fft, abs(total), 'g', 'LineWidth', 1.5, 'DisplayName', 'Total Filter');
+        plot(f_fft, (magnitude_total_dB), 'g', 'LineWidth', 1.5, 'DisplayName', 'Total Filter Response');
         xline(1 / R, 'ko', 'LineWidth', 1.5, 'DisplayName', 'New Sampling Rate');
         xline(0.5 / R, 'k--', 'LineWidth', 1.5, 'DisplayName', 'New Nyquist Rate');
         hold off;
         legend('show');
         title('Magnitude Response');
         xlabel('Normalized Frequency (f/fs)');
-        ylabel('Magnitude');
+        ylabel('Magnitude [dB]');
         grid on;
 
         subplot(2, 1, 2, 'Parent', fig, 'Position', [0.1, 0.1, 0.7, 0.35]);
@@ -122,7 +136,7 @@ function cic_filter_with_sliders
         legend('show');
         title('Phase Response');
         xlabel('Normalized Frequency (f/fs)');
-        ylabel('Phase (radians)');
+        ylabel('Phase [radians]');
         grid on;
 
       % Display for additional calculated values
