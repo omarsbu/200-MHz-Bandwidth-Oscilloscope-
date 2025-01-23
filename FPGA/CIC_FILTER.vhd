@@ -166,7 +166,7 @@ begin
         if rising_edge(clk) then
             integrator_pipeline(0) <= resize(i_data, REG_WIDTH);        
             comb_pipleine(0) <= integrator_pipeline(N-1);        
-            o_data <= resize(shift_right(signed(comb_pipleine(N-1)),R), REG_WIDTH);
+            o_data <= resize(shift_right(signed(comb_pipleine(N-1)),R), data_WIDTH);
         end if;
     end process;
     
