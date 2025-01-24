@@ -188,11 +188,13 @@ begin
                 next_state <= SAMPLE;
             end if;  
         when SAMPLE =>
-            if rising_edge(i_trigger_clk) then
-                next_state <= TRIGGER;
-            else
-                next_state <= SAMPLE;
-            end if;
+            if (i_trigger_clk'event and i_trigger_clk = '1') then 
+                if i_trigger_clk = '1' then
+                    next_state <= TRIGGER;
+                else
+                    next_state <= SAMPLE;
+                end if;
+            end if; 
         when TRIGGER =>
             next_state <= CAPTURE;
         when CAPTURE =>
