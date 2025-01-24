@@ -12,7 +12,7 @@ function cic_filter_with_sliders
     M = 1;
     L = 110; % Initial FIR filter order
     fc = fs / (4 * R); % Pass band edge in Hz       
-    B = 16;
+    B = 16;  % Number of bits for fixed-point coefficients
     impulse = [1, zeros(1, 1023)]; % Impulse signal (length 1024)
 
     % Frequency axis for FFT (normalized to fs)
@@ -154,7 +154,7 @@ function cic_filter_with_sliders
         coefficients_fixed = round(h * 2^(B-1)); % Scale to Q15 format
 
         % Create the COE file
-        coe_filename = 'E:\Oscilloscope\lowpass_filter.coe';
+        coe_filename = 'comp_FIR_for_CIC.coe';
         fid = fopen(coe_filename, 'w');
         
         % Write header information
