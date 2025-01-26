@@ -5,8 +5,8 @@
 -- Description: A compensation deciamte-by-2 FIR filter to flatten the passband 
 --  response of the CIC decimator and improve stop-band attenuation. The filter
 --  coefficients are generated in MATLAB and stored in a .COE file. The entity
---  in this file is a top wrapper for the FIR compiler IP that is generated
---  with a block design.
+--  in this file is a top wrapper for the Xillinx FIR compiler IP that is 
+--  generated with a block design.
 --
 -- Inputs:
 --    clk : system clock
