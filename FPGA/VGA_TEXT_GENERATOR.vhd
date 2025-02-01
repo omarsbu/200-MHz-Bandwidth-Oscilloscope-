@@ -1,33 +1,3 @@
-library ieee;
-use ieee.std_logic_1164.all;
-
-package VGA_TEXT_PARAMETERS is
-    constant V_PER_DIV_STRING   : string := " V/DIV";
-    constant T_PER_DIV_STRING   : string := " s/DIV";
-    constant DELAY_STRING       : string := " Delay:";     
-    constant SAMPLE_RATE_STRING : string := " Sa/s";
-
-    constant TRIGGER_LVL_STRING : string  := " Trig LVL:";
-    constant TRIGGER_MODE_STRING : string := " Trigger Mode:";
-    constant RISING_EDGE_STRING : string  := " RISING EDGE     ";
-    constant FALLING_EDGE_STRING : string := " FALLING EDGE    ";
-
-    constant FREQUENCY_STRING : string := "Frequency:";
-    constant HZ_STRING : string := "Hz";
-    constant KHZ_STRING : string := "kHz";
-    constant MHZ_STRING : string := "MHz";
-    
-    constant VMAX_STRING : string := "V(max):";
-    constant VMIN_STRING : string := "V(min):";
-    constant VAVG_STRING : string := "V(avg):";
-    constant VPKPK_STRING : string := "V(pk-pk):";
-
-    constant X_CURSOR_1_STRING : string := "X1:             ";
-    constant X_CURSOR_2_STRING : string := "X2:             ";
-    constant Y_CURSOR_1_STRING : string := "Y1:             ";
-    constant Y_CURSOR_2_STRING : string := "Y2:             ";    
-end package;
-
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
 -- Name: VGA_TEXT_GENERATOR
@@ -62,7 +32,6 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.all;
-use work.VGA_TEXT_PARAMETERS.all;
 
 entity VGA_TEXT_GENERATOR is
     port(
