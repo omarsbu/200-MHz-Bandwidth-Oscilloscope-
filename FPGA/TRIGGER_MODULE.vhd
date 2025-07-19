@@ -2,8 +2,7 @@
 ----------------------------------------------------------------------------------
 -- Name: Trigger Module
 --
--- Description: Output accumulates input data through summation with previous 
---  input data. Uses signed 2's compliment "roll-over" arithmetic logic.
+-- Description: Provides a positive pulse when the trigger condition is met.
 --
 -- Inputs:
 --    clk : system clock
