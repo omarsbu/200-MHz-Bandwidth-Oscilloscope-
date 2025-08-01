@@ -1,10 +1,30 @@
+----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
+-- Name: CLOCK DIVIDER
+--
+-- Description: Prescaler to generate a tick signal for the sampling clock. This
+--    signal is derivated from the system clock to maintain synchronization 
+--    throughout the design. The sample clock frequency is determined from the
+--    timebase input.
+--
+-- Inputs:
+--    clk : system clock
+--    i_reset : Active-high Synchronous reset
+--    timebase : Sampling period control
+--
+-- Outputs:
+--    clk_out : Tick signal for sampling clock
+--
+----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity CLK_DIVIDER is
     Port ( clk : in  STD_LOGIC;
-           reset : in  STD_LOGIC;
+           i_reset : in  STD_LOGIC;
            timebase : in  STD_LOGIC_VECTOR (4 downto 0);
            clk_out : out  STD_LOGIC);
 end CLK_DIVIDER;
@@ -16,7 +36,7 @@ begin
     process(clk)
     begin
         if rising_edge(clk) then
-            if reset = '1' then
+            if i_reset = '1' then
                 counter <= 0;
                 clk_out <= '1'; 
             elsif counter = counter_maxcnt then
