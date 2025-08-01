@@ -36,3 +36,4 @@ https://analogdevicesinc.github.io/hdl/library/jesd204/axi_jesd204_rx/index.html
 <img width="3682" height="1702" alt="image" src="https://github.com/user-attachments/assets/3abb897e-1d72-4618-bdf3-39a1ca9aeb79" />
 <img width="3272" height="2025" alt="image" src="https://github.com/user-attachments/assets/61c07ef4-8270-4207-a6f3-963ba395698c" />
 <img width="3797" height="2017" alt="image" src="https://github.com/user-attachments/assets/e9cc3c5a-34b2-42f5-847a-6f9ac7e8a6b2" />
+<img width="3662" height="1352" alt="image" src="https://github.com/user-attachments/assets/9cb989e3-0ba2-455c-814e-b5b5a0bc74bf" />
