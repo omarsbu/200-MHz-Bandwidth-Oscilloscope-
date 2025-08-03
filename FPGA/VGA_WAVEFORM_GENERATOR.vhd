@@ -194,8 +194,8 @@ begin
     
     -- Compare current and previous sample with current VGA row     
     pixel_color_select <= '1' when 
-        ((unsigned(row) >= unsigned(previous_sample)) and (row < current_sample)) or
-        ((unsigned(row) <= unsigned(previous_sample)) and (row > current_sample))
+        ((unsigned(row) >= unsigned(previous_sample)) and (row <= current_sample)) or
+        ((unsigned(row) <= unsigned(previous_sample)) and (row >= current_sample))
     else
         '0';
     
