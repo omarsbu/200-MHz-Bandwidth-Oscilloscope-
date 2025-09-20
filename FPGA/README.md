@@ -4,7 +4,6 @@
 
 
 
-![Uploading image.png…]()
 
 
 ![image](https://github.com/user-attachments/assets/cd1a425e-6469-4c5e-984e-6baeb76d2bd7)
