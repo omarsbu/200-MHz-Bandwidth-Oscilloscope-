@@ -43,9 +43,7 @@ entity VGA_MEMORY_CONTROLLER is
         -- VGA RAM Buffer A Interface
         -- ======================
         o_vga_A_rd_enable : out  std_logic;                                    -- Read enable to VGA
---        i_vga_A_rd_addr   : in  std_logic_vector(VGA_ADDR_WIDTH-1 downto 0);   -- Read address from VGA
         i_vga_A_rd_data   : in std_logic_vector(DATA_WIDTH-1 downto 0);        -- Data returned to VGA
---        o_vga_A_rd_data   : out std_logic_vector(DATA_WIDTH-1 downto 0);       -- Data returned to VGA
         o_vga_A_rd_addr   : out  std_logic_vector(VGA_ADDR_WIDTH-1 downto 0);   -- Read address from VGA
 
         o_vga_A_wr_enable : out std_logic;                                     -- Write enable from controller
@@ -56,9 +54,7 @@ entity VGA_MEMORY_CONTROLLER is
         -- VGA RAM Buffer B Interface
         -- ======================
         o_vga_B_rd_enable : out  std_logic;                                    -- Read enable to VGA
---        i_vga_B_rd_addr   : in  std_logic_vector(VGA_ADDR_WIDTH-1 downto 0);   -- Read address from VGA
         i_vga_B_rd_data   : in std_logic_vector(DATA_WIDTH-1 downto 0);        -- Data returned to VGA
---        o_vga_B_rd_data   : out std_logic_vector(DATA_WIDTH-1 downto 0);       -- Data returned to VGA
         o_vga_B_rd_addr   : out  std_logic_vector(VGA_ADDR_WIDTH-1 downto 0);  -- Read address from VGA
         
         o_vga_B_wr_enable : out std_logic;                                     -- Write enable from controller
@@ -110,16 +106,12 @@ begin
                 o_vga_B_rd_enable <= '0';   -- VGA Buffer B Inactive  
                 o_vga_A_rd_enable <= '1';   -- VGA Buffer A Active           
                 o_vga_A_rd_addr <= i_vga_rd_addr;
-                o_vga_rd_data <= i_vga_A_rd_data;
---                o_vga_A_rd_addr <= i_vga_A_rd_addr;
---                o_vga_A_rd_data <= i_vga_A_rd_data;                                  
+                o_vga_rd_data <= i_vga_A_rd_data;                                  
             else
                 o_vga_A_rd_enable <= '0';   -- VGA Buffer A Inactive                       
                 o_vga_B_rd_enable <= '1';   -- VGA Buffer A Active     
                 o_vga_B_rd_addr <= i_vga_rd_addr;
-                o_vga_rd_data <= i_vga_B_rd_data;                      
---                o_vga_B_rd_addr <= i_vga_B_rd_addr;
---                o_vga_B_rd_data <= i_vga_B_rd_data;                       
+                o_vga_rd_data <= i_vga_B_rd_data;                                       
             end if;              
               
             case present_state is
@@ -148,8 +140,6 @@ begin
                                            
                 -- Aquisition Memory Read Port, make sure not to overtake write address from data aquisition
                 if not ( (start_addr + addr_counter) = unsigned(i_acq_wr_addr) ) then
-
---                if not (to_integer(start_addr + addr_counter) = to_integer(unsigned(i_acq_wr_addr))) then
                     addr_counter <= addr_counter + 1;
                     o_acq_rd_enable <= '1';            
                     o_acq_rd_addr <= std_logic_vector(start_addr + addr_counter);                 
