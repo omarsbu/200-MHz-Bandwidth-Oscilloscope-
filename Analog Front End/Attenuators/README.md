@@ -1,4 +1,4 @@
-<img width="2302" height="1642" alt="image" src="https://github.com/user-attachments/assets/861630ce-59f2-4678-9207-f8e196309cdd" />
+<img width="2675" height="1850" alt="image" src="https://github.com/user-attachments/assets/802a1c9e-cdf0-4fe8-8a73-908cfa6b71c1" />
 
 => Attenuators increase the input range of the scope by allowing signals with large amplitudes to be scaled down to within the ADC input range. 
 
