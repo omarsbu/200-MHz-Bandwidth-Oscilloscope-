@@ -1,4 +1,4 @@
-<img width="2732" height="1750" alt="image" src="https://github.com/user-attachments/assets/eb6d14a8-d1d5-4ba4-aa5b-025d52163165" />
+<img width="2450" height="1555" alt="image" src="https://github.com/user-attachments/assets/325bd97f-adf3-42d8-9ffd-20fa539254aa" />
 
 => Impedance Converter serves as a buffer, presenting a 50GΩ input impedance and a driving the output with 50Ω output impedance. 
 
