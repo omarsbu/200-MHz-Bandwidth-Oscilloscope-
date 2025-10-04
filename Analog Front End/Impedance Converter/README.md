@@ -4,4 +4,4 @@
 
 => Large input impedance allows input impedance to be terminated with 1MΩ or 50Ω.
 
-=> Composite amplifier formed with OPA140 which has better DC precision. 
+=> Composite amplifier formed with OPA140 which has high DC precision and BUF802 which has high superior AC performance. 
