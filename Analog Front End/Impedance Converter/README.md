@@ -5,3 +5,7 @@
 => Large input impedance allows input impedance to be terminated with 1MΩ or 50Ω.
 
 => Composite amplifier formed with OPA140 which has high DC precision and BUF802 which has high superior AC performance. 
+
+=> Differential Amplifier to offset output DC voltage by +/- 2.5V
+
+=> Level shifter to drive LMH6518 with its ideal common-mode input voltage level for best performance.
