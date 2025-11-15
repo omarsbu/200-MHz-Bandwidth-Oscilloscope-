@@ -9,7 +9,7 @@ The input stage of each channel consists of a set of relay switches to select be
 
 <img width="2342" height="1670" alt="image" src="https://github.com/user-attachments/assets/60f245b9-53fe-4f19-8048-275fcd5a2923" />
 
-The BUF802 is used in conjunction with the OPA140 to form a composite amplifier that provides strong performance at both high and low frequencies. The BUF802, with its JFET input, offers exceptional AC performance but poor DC precision, while the OPA140 delivers excellent DC precision but lacks sufficient bandwidth and slew rate for high-frequency signals. To leverage the strengths of both, the main input is AC-coupled to the BUF802, while the auxiliary input is managed by the OPA140’s DC offset circuitry.
+The BUF802 is used in conjunction with the OPA140 to form a composite amplifier that provides strong performance at both high and low frequencies. The BUF802, with its JFET input, offers exceptional AC performance but poor DC precision, while the OPA140 delivers excellent DC precision but lacks sufficient bandwidth and slew rate for high-frequency signals. To leverage the strengths of both, the main input is AC-coupled to the BUF802, while the auxiliary input is conrtolled by the OPA140 DC offset circuitry. he DC offset circuitry uses a differential amplifier along with a DAC (0–5 V) and a 2.5 V reference to shift the output within a programmable range of ±2.5 V. 
 
 <img width="2645" height="1722" alt="image" src="https://github.com/user-attachments/assets/02ce70f2-cafe-4c60-8ae5-f02b951b3f3e" />
 
