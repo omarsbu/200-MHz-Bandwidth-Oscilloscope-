@@ -1,6 +1,6 @@
 <img width="1880" height="872" alt="image" src="https://github.com/user-attachments/assets/a6f66322-5d59-40fa-9f95-0e7c16923dee" />
 
-“The purpose of an analog front end is to condition the input signal so that it maximizes the ADC’s dynamic range and limits the bandwidth to the ADC’s Nyquist frequency. Attenuators extend the measurable range by scaling down large input signals, while a programmable gain amplifier boosts small signals so they make full use of the ADC’s resolution. DC offsetting is also applied to bias the signal so that it stays well within the ADC’s input range.”
+The purpose of an analog front end is to condition the input signal so that it maximizes the ADC’s dynamic range and limits the bandwidth to the ADC’s Nyquist frequency. Attenuators extend the measurable range by scaling down large input signals, while a programmable gain amplifier boosts small signals so they make full use of the ADC’s resolution. DC offsetting is also applied to bias the signal so that it stays well within the ADC’s input range.
 
 
 
