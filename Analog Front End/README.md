@@ -4,7 +4,7 @@ The purpose of an analog front end is to condition the input signal so that it m
 
 <img width="2197" height="1477" alt="image" src="https://github.com/user-attachments/assets/4b8f5d5a-84cb-4dcb-b7b4-b6fc57d68020" />
 
-The input stage of each channel consists of a set of relay switches to select between AC and DC coupling, as well as different attenuation levels. A 1 MΩ L-pad attenuator is used for normal measurements with standard probes, while 50 Ω pi-attenuators are used for high-fidelity measurements from a 50 Ω source. Protection diodes clamp the input voltage if it exceeds the positive or negative supply rails.
+The input stage of each channel consists of a set of relay switches to select between AC and DC coupling, as well as different attenuation levels. A compensated 1 MΩ L-pad attenuator is used for normal measurements with standard probes, while 50 Ω pi-attenuators are used for high-fidelity measurements from a 50 Ω source. Protection diodes clamp the input voltage if it exceeds the positive or negative supply rails.
 
 
 <img width="2342" height="1670" alt="image" src="https://github.com/user-attachments/assets/60f245b9-53fe-4f19-8048-275fcd5a2923" />
