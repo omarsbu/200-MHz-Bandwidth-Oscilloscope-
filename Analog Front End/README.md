@@ -13,7 +13,7 @@ The BUF802 is used in conjunction with the OPA140 to form a composite amplifier 
 <img width="2645" height="1722" alt="image" src="https://github.com/user-attachments/assets/02ce70f2-cafe-4c60-8ae5-f02b951b3f3e" />
 
 The ideal input condition of the LMH6518 are shown below:
-<img width="1687" height="227" alt="image" src="https://github.com/user-attachments/assets/ad15335a-d3a1-4635-a71a-f0a67e6306b5" />
+<img width="168.7" height="22.7" alt="image" src="https://github.com/user-attachments/assets/ad15335a-d3a1-4635-a71a-f0a67e6306b5" />
 The LMH6552 is used as a level-shifter and single-ended to differential converter with drives the LMH6518 with a balanced differential input with 2.5V common-mode voltage. 
 
 
