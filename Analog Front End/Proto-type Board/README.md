@@ -1,9 +1,13 @@
 Stackup:
 
 Top Layer - Signal + Power
+
 Internal Layer 1 - GND
+
 Internal Layer 2 - GND
+
 Bottom Layer - Signal + Power
+
 
 
 <img width="2112" height="955" alt="image" src="https://github.com/user-attachments/assets/b704fece-3d64-4354-bd62-08d217bb8a2c" />
