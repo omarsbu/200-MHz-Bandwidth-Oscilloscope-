@@ -17,3 +17,8 @@ The ideal input condition of the LMH6518 are shown below:
 The LMH6552 functions as a level shifter and single-ended to differential converter with 0 dB gain, providing a balanced differential input with a 2.5 V common-mode voltage to the LMH6518. The single-ended input to the LMH6552 is clamped to ±1 V by the BUF802, ensuring that the LMH6552’s differential output is also limited to ±1 V. The LMH6518 includes programmable bandwidth-limiting filters for anti-aliasing, and its output common-mode voltage is set to match the ADC’s common-mode voltage.
 
 <img width="1872" height="1485" alt="image" src="https://github.com/user-attachments/assets/2ba2368d-d504-40e0-8401-7547149d89f9" />
+
+
+
+
+<img width="2112" height="955" alt="image" src="https://github.com/user-attachments/assets/b704fece-3d64-4354-bd62-08d217bb8a2c" />
