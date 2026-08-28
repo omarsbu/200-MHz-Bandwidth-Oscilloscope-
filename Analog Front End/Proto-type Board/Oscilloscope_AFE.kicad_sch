@@ -1,0 +1,969 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "b2763a79-2410-4bbf-abea-fcdf1a1a9c02")
+	(paper "A4")
+	(lib_symbols
+		(symbol "Connector:Conn_Coaxial"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0.254 3.048 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_Coaxial"
+				(at 2.921 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "BNC SMA SMB SMC LEMO coaxial connector CINCH RCA MCX MMCX U.FL UMRF"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "*BNC* *SMA* *SMB* *SMC* *Cinch* *LEMO* *UMRF* *MCX* *U.FL*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Conn_Coaxial_0_1"
+				(polyline
+					(pts
+						(xy -2.54 0) (xy -0.508 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 1.778 0)
+					(mid 0.222 -1.8079)
+					(end -1.778 -0.508)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start -1.778 0.508)
+					(mid 0.2221 1.8084)
+					(end 1.778 0)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 0)
+					(radius 0.508)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "Conn_Coaxial_1_1"
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "In"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -5.08 90)
+					(length 2.54)
+					(name "Ext"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "power:GND"
+			(power)
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "#PWR"
+				(at 0 -6.35 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Value" "GND"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "global power"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "GND_0_1"
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 -1.27) (xy 1.27 -1.27) (xy 0 -2.54) (xy -1.27 -1.27) (xy 0 -1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "GND_1_1"
+				(pin power_in line
+					(at 0 0 270)
+					(length 0)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
+	(wire
+		(pts
+			(xy 216.535 86.995) (xy 216.535 88.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "133bf906-9294-47c2-ab2b-2052e949337d")
+	)
+	(wire
+		(pts
+			(xy 97.155 86.995) (xy 97.155 88.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "22a3e372-c7ee-48f6-8b72-32bebd4bbfd5")
+	)
+	(wire
+		(pts
+			(xy 111.125 95.885) (xy 123.825 95.885)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2b55d905-8138-4d1b-a94c-ad69dcf6480b")
+	)
+	(wire
+		(pts
+			(xy 104.775 128.27) (xy 95.885 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5592e82b-2245-425d-b350-c329aaa3f30c")
+	)
+	(wire
+		(pts
+			(xy 95.885 131.445) (xy 111.125 131.445)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6fd6d826-ed5c-4ba7-b687-fb2c28f4aaf2")
+	)
+	(wire
+		(pts
+			(xy 95.885 136.525) (xy 163.195 136.525)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6ff67390-1458-4778-b47d-82a6602d9c99")
+	)
+	(wire
+		(pts
+			(xy 95.885 133.985) (xy 117.475 133.985)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7978b0a0-d750-4e5b-8444-4ae47b39a722")
+	)
+	(wire
+		(pts
+			(xy 117.475 98.425) (xy 117.475 133.985)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7c93d6c5-c61f-464b-beac-1867f4fbc944")
+	)
+	(wire
+		(pts
+			(xy 102.235 81.915) (xy 123.825 81.915)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8095d858-c17d-42f1-8377-f35390acf635")
+	)
+	(wire
+		(pts
+			(xy 117.475 98.425) (xy 123.825 98.425)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "92901e3b-9a94-4461-95d2-202350a979b1")
+	)
+	(wire
+		(pts
+			(xy 202.565 81.915) (xy 211.455 81.915)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "99012fbb-8f59-42f5-bc56-bcd9df22255e")
+	)
+	(wire
+		(pts
+			(xy 163.195 98.425) (xy 163.195 136.525)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a1f8d835-231b-4c7f-bf4e-9de81c8c8cb7")
+	)
+	(wire
+		(pts
+			(xy 163.195 98.425) (xy 171.45 98.425)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c36fab8c-79c3-4ecf-b192-6677d06aa021")
+	)
+	(wire
+		(pts
+			(xy 111.125 95.885) (xy 111.125 131.445)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dc7ace15-2384-4ac8-a56e-3e5093420a72")
+	)
+	(wire
+		(pts
+			(xy 154.305 81.915) (xy 171.45 81.915)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e3dd863c-6627-4083-8ee2-6366932dfde0")
+	)
+	(wire
+		(pts
+			(xy 104.775 93.345) (xy 104.775 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f9f2c67f-f48b-4def-a170-e15d12285b97")
+	)
+	(wire
+		(pts
+			(xy 104.775 93.345) (xy 123.825 93.345)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ffafd889-268a-4d89-b095-ef4af4bee0a7")
+	)
+	(symbol
+		(lib_id "Connector:Conn_Coaxial")
+		(at 97.155 81.915 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "38b92f0b-9335-4f67-ab0b-1ff06d94a6a1")
+		(property "Reference" "J1"
+			(at 93.98 83.4783 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "BNC"
+			(at 93.98 80.9383 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "BUF802:CONN_73100-0105_MOL"
+			(at 97.155 81.915 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 97.155 81.915 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)"
+			(at 97.155 81.915 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "07f1a4c4-99a6-4984-8222-aa3360367e2e")
+		)
+		(pin "2"
+			(uuid "d144ff0f-c064-49c0-9558-12de1bc79235")
+		)
+		(instances
+			(project ""
+				(path "/b2763a79-2410-4bbf-abea-fcdf1a1a9c02"
+					(reference "J1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 216.535 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3caa4b49-bdcb-4853-bff5-2b1d01c4412b")
+		(property "Reference" "#PWR02"
+			(at 216.535 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 216.535 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 216.535 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 216.535 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 216.535 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "debadd2a-bb81-432c-bec5-57b7b93a6532")
+		)
+		(instances
+			(project "Oscilloscope_AFE"
+				(path "/b2763a79-2410-4bbf-abea-fcdf1a1a9c02"
+					(reference "#PWR02")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 97.155 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "bf66d447-9230-4323-8c17-e0e0f3e99e85")
+		(property "Reference" "#PWR01"
+			(at 97.155 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 97.155 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 97.155 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 97.155 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 97.155 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "deb174cb-9ec5-4318-b908-a9a988785082")
+		)
+		(instances
+			(project ""
+				(path "/b2763a79-2410-4bbf-abea-fcdf1a1a9c02"
+					(reference "#PWR01")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_Coaxial")
+		(at 216.535 81.915 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c6b19579-f4b9-4601-8a4c-f79c1bf5ce09")
+		(property "Reference" "J2"
+			(at 220.98 83.185 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "BNC"
+			(at 221.615 80.645 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "BUF802:CONN_73100-0105_MOL"
+			(at 216.535 81.915 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 216.535 81.915 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)"
+			(at 216.535 81.915 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "283c0e7a-7207-41b9-87f1-5f52f3254d4d")
+		)
+		(pin "2"
+			(uuid "5d5506c5-8964-428f-a609-227dd172bbad")
+		)
+		(instances
+			(project "Oscilloscope_AFE"
+				(path "/b2763a79-2410-4bbf-abea-fcdf1a1a9c02"
+					(reference "J2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(sheet
+		(at 123.825 76.835)
+		(size 30.48 24.765)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "137cd4ca-e1e9-4c76-80b5-a468e62cc5c6")
+		(property "Sheetname" "Attenuators and Input Coupling"
+			(at 123.825 76.1234 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "AFE_INPUT_STAGE.kicad_sch"
+			(at 123.825 102.1846 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "IN" input
+			(at 123.825 81.915 180)
+			(uuid "ba824e59-f729-48d9-bc32-8cec429b135e")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "ATTEN_OUT" output
+			(at 154.305 81.915 0)
+			(uuid "5fc3ef51-d253-462a-a3f5-8bbf829c9b44")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "RELAY_CTRL_0" input
+			(at 123.825 93.345 180)
+			(uuid "ac4f6ce0-ab26-48c1-8ac9-9b45ee07c1df")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "RELAY_CTRL_1" input
+			(at 123.825 95.885 180)
+			(uuid "14da251d-317f-4241-be61-5a41a0cf4a95")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "RELAY_CTRL_2" input
+			(at 123.825 98.425 180)
+			(uuid "6bc061e3-8a4d-4249-a9d2-43cbcc96e84d")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "Oscilloscope_AFE"
+				(path "/b2763a79-2410-4bbf-abea-fcdf1a1a9c02"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 171.45 76.835)
+		(size 31.115 24.765)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "b8c8bcd5-c97e-4f37-960e-1b043dc425c6")
+		(property "Sheetname" "JFET Buffer"
+			(at 171.45 76.1234 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "AFE_JFET_BUFFER.kicad_sch"
+			(at 171.45 102.1846 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "BUFF_IN" input
+			(at 171.45 81.915 180)
+			(uuid "ecba74bb-30c4-43fc-a810-03051c3242e9")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "BUFF_OUT" output
+			(at 202.565 81.915 0)
+			(uuid "17505fde-013b-4080-ba48-44ca0b1e4575")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "DC_OFFSET" input
+			(at 171.45 98.425 180)
+			(uuid "bfbc2e93-9071-4508-9a60-55b87f423875")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "Oscilloscope_AFE"
+				(path "/b2763a79-2410-4bbf-abea-fcdf1a1a9c02"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 66.04 123.825)
+		(size 29.845 16.51)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "ddc84e1d-7759-4ae0-977e-74e0cafabf96")
+		(property "Sheetname" "Power Connector"
+			(at 66.04 123.1134 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "AFE_CONNECTOR.kicad_sch"
+			(at 66.04 140.9196 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "DC_OFFSET" output
+			(at 95.885 136.525 0)
+			(uuid "689069e5-33a2-42bd-b7e7-efe3c854634d")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "RELAY_CTRL_0" output
+			(at 95.885 128.27 0)
+			(uuid "6141681a-0283-467f-8a7d-c4355da3a77d")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "RELAY_CTRL_1" output
+			(at 95.885 131.445 0)
+			(uuid "51cd005d-4f94-4a0e-a985-469192cb2ed1")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "RELAY_CTRL_2" output
+			(at 95.885 133.985 0)
+			(uuid "d5de3f4b-3ac7-46d9-8829-be9845829e37")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(instances
+			(project "Oscilloscope_AFE"
+				(path "/b2763a79-2410-4bbf-abea-fcdf1a1a9c02"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
