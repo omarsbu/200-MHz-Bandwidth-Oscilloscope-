@@ -1,7 +1,5 @@
 -- ===========================================================================
 -- Title      : VGA Memory Controller (Double Buffer with Clear A/B Names)
--- Author     : [Your Name]
--- Date       : [Date]
 -- Description: Manages two separate VGA RAM buffers (A and B) for
 --              double-buffered waveform display. Reads triggered waveform
 --              data from Acquisition RAM and writes it into the inactive
